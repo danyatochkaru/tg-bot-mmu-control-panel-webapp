@@ -3,5 +3,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - POSTGRES_HOST=database
     ports:
-      - "3000:3000"
+      - 3000:3000
+    volumes:
+      - ./src:/app/src
+      - ./prisma:/app/prisma
+      - ./node_modules:/app/node_modules
+  database:
+    image: postgres:16.1-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWD
+      - POSTGRES_DB=$POSTGRES_DATABASE
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

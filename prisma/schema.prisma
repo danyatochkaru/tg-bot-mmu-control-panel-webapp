@@ -1,0 +1,29 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id           String    @id @default(uuid())
+  requestToken String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  email        String
+  password     String?
+  tgId         String?
+  Mailing      Mailing[]
+}
+
+model Mailing {
+  id         String   @id @default(uuid())
+  recipients Int[]
+  message    String
+  senderId   String
+  createdAt  DateTime @default(now())
+  sender     Profile  @relation(fields: [senderId], references: [id])
+}

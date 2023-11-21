@@ -1,44 +1,30 @@
 import '@mantine/core/styles.css';
 import '@mantine/tiptap/styles.css';
+import '@mantine/notifications/styles.css';
 
-import {ColorSchemeScript, MantineProvider} from '@mantine/core';
-import {TelegramProvider} from "@/app/TelegramProvider";
+import {ColorSchemeScript} from '@mantine/core';
+import {PropsWithChildren} from "react";
+import {Providers} from "@/app/providers";
+import {Notifications} from "@mantine/notifications";
 
 export const metadata = {
-    title: 'My Mantine app',
-    description: 'I have followed setup instructions carefully',
+    title: 'Панель управления рассылкой',
 };
 
-export default function RootLayout({children}: { children: React.ReactNode }) {
+
+export default async function RootLayout({children}: PropsWithChildren) {
+
     return (
-        <html lang="ru">
-        <head>
-            <ColorSchemeScript/>
-        </head>
-        <body>
-        <MantineProvider theme={{
-            colors: {
-                brand: [
-                    "#fffce1",
-                    "#fff7cc",
-                    "#ffef9b",
-                    "#ffe664",
-                    "#ffdf38",
-                    "#ffda1c",
-                    "#ffd600",
-                    "#e3be00",
-                    "#c9a900",
-                    "#ae9200"
-                ]
-            },
-            primaryColor: 'brand',
-            primaryShade: 6,
-        }}>
-            <TelegramProvider>
+            <html lang="ru">
+            <head>
+                <ColorSchemeScript/>
+            </head>
+            <body>
+            <Providers>
+                <Notifications/>
                 {children}
-            </TelegramProvider>
-        </MantineProvider>
-        </body>
-        </html>
+            </Providers>
+            </body>
+            </html>
     );
 }

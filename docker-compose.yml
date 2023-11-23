@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_HOST=database
     ports:
-      - 3000:3000
+      - 3030:3000
     volumes:
       - ./src:/app/src
       - ./prisma:/app/prisma

@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions)
 
-        if (!session) {
+        if (!session || !session.user) {
             return NextResponse.json({message: 'Недостаточно прав'}, {status: 401})
         }
 
@@ -24,16 +24,20 @@ export async function POST(req: Request) {
 
         const {email} = newUserSchema.parse(body)
 
-        const existingProfile = await db.profile.findFirst({
-            where: {
-                email
-            }
-        })
+        const [existingProfile, existingInvite] = await Promise.all([
+            db.profile.findFirst({where: {email}}),
+            db.invite.findFirst({where: {email}})
+        ])
+
         if (existingProfile) {
-            return NextResponse.json({message: 'Приглашение уже отправлено или профиль уже существует'}, {status: 400})
+            return NextResponse.json({message: 'Пользователь уже зарегистирован'}, {status: 400})
+        }
+        if (existingInvite) {
+            return NextResponse.json({message: 'Приглашение уже отправлено'}, {status: 400})
         }
 
         const token = hashPassword(email, process.env.HASH_SALT!)
+        const initiator = await db.profile.findFirstOrThrow({where: {email: session.user.email as string}})
 
         await sendEmail({
             to: email,
@@ -41,9 +45,10 @@ export async function POST(req: Request) {
             html: render(EmailInvite(token))
         })
 
-        await db.profile.create({
+        const now = new Date()
+        await db.invite.create({
             data: {
-                email, requestToken: token
+                email, token, expiresAt: new Date(now.setDate(now.getDate() + 7)), initiatorId: initiator.id
             }
         })
 

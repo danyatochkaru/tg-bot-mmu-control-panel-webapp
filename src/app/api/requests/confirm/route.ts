@@ -16,27 +16,29 @@ export async function PATCH(req: Request) {
         const body = await req.json()
         const {token, password} = confirmSchema.parse(body)
 
-        const existingRequest = await db.profile.findFirst({
-            where: {
-                requestToken: token
-            }
-        })
+        const existingRequest = await db.invite.findFirst({where: {token}})
         if (!existingRequest) {
             return NextResponse.json({message: 'Запрос не найден'}, {status: 404})
         }
 
+        if (existingRequest.expiresAt < new Date()) {
+            return NextResponse.json({message: 'Запрос устарел'}, {status: 410})
+        }
+
         const hashedPassword = hashPassword(password, process.env.HASH_SALT!)
-        const updatedProfile = await db.profile.update({
-            where: {
-                id: existingRequest.id
-            },
+        const newProfile = await db.profile.create({
             data: {
-                requestToken: null,
+                email: existingRequest.email,
                 password: hashedPassword,
+
             }
         })
+        await db.invite.update({
+            data: {expiresAt: new Date()},
+            where: {token},
+        })
 
-        const {password: _, ...profile} = updatedProfile
+        const {password: _, ...profile} = newProfile
 
         return NextResponse.json({profile, message: 'Пароль успешно установлен'}, {status: 200})
     } catch (e: any | Error | ZodError) {

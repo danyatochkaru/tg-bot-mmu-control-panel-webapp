@@ -1,5 +1,5 @@
 import {Container} from "@mantine/core";
-import {NewProfileForm} from "@/components/newProfileForm";
+import {NewProfileForm} from "@/components/NewProfileForm";
 import {FormLayout} from "@/layouts";
 
 function NewProfilePage() {

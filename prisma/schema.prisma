@@ -1,29 +1,39 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+    provider      = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model Profile {
-  id           String    @id @default(uuid())
-  requestToken String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  email        String
-  password     String?
-  tgId         String?
-  Mailing      Mailing[]
+    id        String    @id @default(uuid())
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    email     String    @unique
+    password  String
+    tgId      String?
+    Mailing   Mailing[]
+    Invite    Invite[]
+}
+
+model Invite {
+    id          String   @id @default(uuid())
+    token       String   @unique
+    email       String   @unique
+    initiator   Profile  @relation(fields: [initiatorId], references: [id])
+    initiatorId String
+    createdAt   DateTime @default(now())
+    expiresAt   DateTime
 }
 
 model Mailing {
-  id         String   @id @default(uuid())
-  recipients Int[]
-  message    String
-  senderId   String
-  createdAt  DateTime @default(now())
-  sender     Profile  @relation(fields: [senderId], references: [id])
+    id         String   @id @default(uuid())
+    recipients Int[]
+    message    String
+    senderId   String
+    createdAt  DateTime @default(now())
+    sender     Profile  @relation(fields: [senderId], references: [id])
 }

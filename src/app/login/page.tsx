@@ -8,8 +8,7 @@ import {PAGES_LINK} from "@/constants/PAGES_LINK";
 
 async function fetchRequest(token: string) {
     const resRequest = await fetch(process.env.NEXTAUTH_URL + '/api/requests/check?token=' + token)
-    if (!resRequest.ok) return undefined
-    return resRequest.json()
+    return {data: await resRequest.json(), status: resRequest.ok}
 }
 
 
@@ -21,9 +20,9 @@ async function LoginPage(props: { searchParams: { token?: string } }) {
     }
 
     if (props.searchParams.token) {
-        const request = await fetchRequest(props.searchParams.token)
-        if (!request) {
-            redirect(PAGES_LINK.LOGIN)
+        const {data, status} = await fetchRequest(props.searchParams.token)
+        if (!status) {
+            redirect(PAGES_LINK.LOGIN + (data?.message ? `?message=${encodeURIComponent(data.message)}&messageColor=red` : ''))
         }
     }
 

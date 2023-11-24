@@ -5,7 +5,7 @@ import '@mantine/notifications/styles.css';
 import {ColorSchemeScript} from '@mantine/core';
 import {PropsWithChildren} from "react";
 import {Providers} from "@/app/providers";
-import {Notifications} from "@mantine/notifications";
+import {NotifyAnywhereLayout} from "@/layouts";
 
 export const metadata = {
     title: 'Панель управления рассылкой',
@@ -21,8 +21,9 @@ export default async function RootLayout({children}: PropsWithChildren) {
             </head>
             <body>
             <Providers>
-                <Notifications/>
-                {children}
+                <NotifyAnywhereLayout>
+                    {children}
+                </NotifyAnywhereLayout>
             </Providers>
             </body>
             </html>

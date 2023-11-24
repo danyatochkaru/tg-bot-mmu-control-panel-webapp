@@ -10,13 +10,14 @@ export async function GET(req: Request) {
             return NextResponse.json({message: 'Отсутствует ключ'}, {status: 400})
         }
 
-        const existingRequest = await db.profile.findFirst({
-            where: {
-                requestToken: url.searchParams.get('token')
-            }
-        })
+
+        const existingRequest = await db.invite.findFirst({where: {token: url.searchParams.get('token')!}})
         if (!existingRequest) {
             return NextResponse.json({message: 'Запрос не найден'}, {status: 404})
+        }
+
+        if (existingRequest.expiresAt < new Date()) {
+            return NextResponse.json({message: 'Запрос устарел'}, {status: 410})
         }
 
 

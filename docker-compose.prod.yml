@@ -2,13 +2,11 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     environment:
       - POSTGRES_HOST=database
     ports:
       - 3030:3000
-    volumes:
-      - ./src:/app/src
   database:
     image: postgres:16.1-alpine
     restart: unless-stopped
@@ -20,8 +18,3 @@ services:
       - 5432:5432
     volumes:
       - ./pgdata:/var/lib/postgresql/data
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080

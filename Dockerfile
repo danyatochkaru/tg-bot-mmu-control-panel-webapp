@@ -3,6 +3,6 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn
 COPY . .
-VOLUME ./src /app/src
+RUN npx prisma db push
 EXPOSE 3000
 CMD ["yarn", "dev"]

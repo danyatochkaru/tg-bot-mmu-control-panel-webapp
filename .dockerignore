@@ -28,7 +28,7 @@ web_modules/
 .rts2_cache_umd/
 .node_repl_history
 *.tgz
-#.env
+.env.example
 .env.development.local
 .env.test.local
 .env.production.local

@@ -9,7 +9,7 @@ type EmailPayload = {
 
 const smtpOptions: SMTPTransport.Options = {
     host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT!),
+    port: parseInt(process.env.SMTP_PORT as unknown as string),
     secure: true,
     auth: {
         user: process.env.SMTP_USER,

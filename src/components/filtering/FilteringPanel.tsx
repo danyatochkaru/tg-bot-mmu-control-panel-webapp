@@ -1,9 +1,11 @@
-import {Chip, Flex, Stack} from "@mantine/core";
-import {InputWithSearchAndPills} from "@/components";
+"use client"
+
+import {ActionIcon, Chip, Flex, MultiSelect, Stack} from "@mantine/core";
 import {useFiltersStore} from "@/store/filters";
 import {useParamsStore} from "@/store/params";
 import {useGroupsStore} from "@/store/groups";
 import {useEffect} from "react";
+import {IconX} from "@tabler/icons-react";
 
 export function FilteringPanel() {
     const filtersStore = useFiltersStore()
@@ -29,11 +31,14 @@ export function FilteringPanel() {
 
     return <Stack gap={'sm'}>
         <Stack>
-            <InputWithSearchAndPills dataset={paramsStore.speciality} selected={filtersStore.speciality}
-                                     setSelected={(update) => {
-                                         const updated = update(filtersStore.speciality)
-                                         filtersStore.setSpeciality(updated)
-                                     }}/>
+            <MultiSelect
+                    placeholder={'Начните вводить направление'}
+                    searchable
+                    data={paramsStore.speciality}
+                    value={filtersStore.speciality}
+                    onChange={filtersStore.setSpeciality}
+                    clearable
+            />
         </Stack>
         <Stack gap={'xs'}>
             <Flex gap={'xs'} wrap={'wrap'}>
@@ -47,6 +52,15 @@ export function FilteringPanel() {
                                         : [...filtersStore.courses, value]
                         )}
                 >{value}</Chip>))}
+                {filtersStore.courses.length > 0 &&
+                        <ActionIcon
+                                variant="subtle"
+                                radius={'lg'}
+                                color={'black'}
+                                onClick={() => filtersStore.setCourses([])}
+                        >
+                            <IconX stroke={1.5} size={'1em'}/>
+                        </ActionIcon>}
             </Flex>
         </Stack>
         <Stack gap={'xs'}>
@@ -61,6 +75,15 @@ export function FilteringPanel() {
                                         : [...filtersStore.formsOfEducation, value]
                         )}
                 >{value}</Chip>))}
+                {filtersStore.formsOfEducation.length > 0 &&
+                        <ActionIcon
+                                variant="subtle"
+                                radius={'lg'}
+                                color={'black'}
+                                onClick={() => filtersStore.setFormsOfEducation([])}
+                        >
+                            <IconX stroke={1.5} size={'1em'}/>
+                        </ActionIcon>}
             </Flex>
         </Stack>
     </Stack>

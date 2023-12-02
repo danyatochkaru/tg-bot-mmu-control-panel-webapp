@@ -27,6 +27,7 @@ export function Providers({children}: PropsWithChildren) {
                 },
                 primaryColor: 'brand',
                 primaryShade: 6,
+                defaultRadius: 'xs',
             }}>
                 <SessionProvider>
                     <TelegramProvider>

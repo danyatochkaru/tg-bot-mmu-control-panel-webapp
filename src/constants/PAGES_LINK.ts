@@ -1,8 +1,12 @@
 export const PAGES_LINK = {
     HOME: '/',
     LOGIN: '/login',
-    NEW_NOTIFY: '/messages/new?step=filtering',
-    NEW_NOTIFY_PRINTING: '/messages/new?step=printing',
+    MESSAGES: '/messages',
+    NEW_MESSAGE: '/messages/new',
+    NEW_MESSAGE_FILTERING: '/messages/new?step=filtering',
+    NEW_MESSAGE_PRINTING: '/messages/new?step=printing',
     PROFILE: '/profile',
+    PROFILE_LIST: '/profile/list',
     NEW_PROFILE: '/profile/new',
+    PROFILE_SETTINGS: '/profile/settings',
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import {AppShell, Button, Container, Divider, Flex, Group, Text} from "@mantine/core";
-import {FilteringPanel, FilteringResultList} from "@/components";
+import {FilteringPanel, FilteringResultList} from "./";
 import IGroup from '@/types/group'
 import {useFilteringManager} from "@/hooks/useFilteringManager";
 import endingByNum from "@/utils/endingByNum";
@@ -29,7 +29,7 @@ export function FilteringModule(props: { groups: IGroup[] }) {
                         >Очистить</Button>
                     </Group>
                     <Button disabled={!groups.length}
-                            onClick={() => router.push(PAGES_LINK.NEW_NOTIFY_PRINTING)}
+                            onClick={() => router.push(PAGES_LINK.NEW_MESSAGE_PRINTING)}
                     >Далее</Button>
                 </Flex>
             </Container>

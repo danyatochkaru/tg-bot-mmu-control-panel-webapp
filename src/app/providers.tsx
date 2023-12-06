@@ -4,8 +4,13 @@ import {MantineProvider} from "@mantine/core";
 import {SessionProvider} from "next-auth/react";
 import {TelegramProvider} from "@/app/TelegramProvider";
 import {PropsWithChildren} from "react";
+import {SWRConfig} from "swr";
 
 const NotoSansFont = Noto_Sans({weight: ["200", "400", "500", '600'], subsets: ['cyrillic', 'latin']})
+
+
+//@ts-ignore
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export function Providers({children}: PropsWithChildren) {
     return (
@@ -31,7 +36,11 @@ export function Providers({children}: PropsWithChildren) {
             }}>
                 <SessionProvider>
                     <TelegramProvider>
-                        {children}
+                        <SWRConfig value={{
+                            fetcher,
+                        }}>
+                            {children}
+                        </SWRConfig>
                     </TelegramProvider>
                 </SessionProvider>
             </MantineProvider>

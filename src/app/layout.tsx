@@ -1,3 +1,5 @@
+import './globals.css'
+
 import '@mantine/core/styles.css';
 import '@mantine/tiptap/styles.css';
 import '@mantine/notifications/styles.css';
@@ -17,6 +19,7 @@ export default async function RootLayout({children}: PropsWithChildren) {
     return (
             <html lang="ru">
             <head>
+                <meta name={'author'} content={'danyatochkaru'}/>
                 <ColorSchemeScript/>
             </head>
             <body>

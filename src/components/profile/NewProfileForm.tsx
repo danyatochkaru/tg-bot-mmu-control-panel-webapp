@@ -51,7 +51,7 @@ export function NewProfileForm() {
     }
 
     return <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Text size={'lg'} fw={500}>Отправка запроса на регистрацию</Text>
+        <Text fw={700} size={'lg'}>Отправка запроса на регистрацию</Text>
         <Stack py={'md'}>
             <TextInput
                     label={'Почта'}

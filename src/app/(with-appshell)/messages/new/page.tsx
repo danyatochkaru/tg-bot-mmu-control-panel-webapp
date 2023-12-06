@@ -1,8 +1,7 @@
-import {FilteringModule} from "@/components";
+import {FilteringModule, PrintingModule} from "@/components/messages";
 import {GROUPS} from "@/constants/groups";
 import {redirect} from "next/navigation";
 import {PAGES_LINK} from "@/constants/PAGES_LINK";
-import {PrintingModule} from "@/components/printinig";
 
 export default function NewMessagePage(props: { searchParams: { step?: string } }) {
     if (props.searchParams.step === 'filtering') {
@@ -13,5 +12,5 @@ export default function NewMessagePage(props: { searchParams: { step?: string } 
         return <PrintingModule/>
     }
 
-    return redirect(PAGES_LINK.NEW_NOTIFY)
+    return redirect(PAGES_LINK.NEW_MESSAGE_FILTERING)
 }

@@ -1,15 +1,13 @@
 "use client"
 
-import {Button, Group, Skeleton, Text} from "@mantine/core";
+import {Button, Group, Text} from "@mantine/core";
 import {IconDoorExit} from "@tabler/icons-react";
-import {signOut, useSession} from "next-auth/react";
+import {signOut} from "next-auth/react";
 
-export function LogoutButton() {
-    const {status, data: session} = useSession()
-    return (
-            <Skeleton w={'fit-content'} visible={status !== 'authenticated'}>
+export function LogoutButton({name}: { name: string }) {
+    return (<>
                 <Group visibleFrom={'sm'}>
-                    <Text>{session?.user?.email ? session.user.email.split('@')[0] : 'Польователь'}</Text>
+                    <Text>{name}</Text>
                     <Button rightSection={<IconDoorExit size={'1em'}/>}
                             color={'red'}
                             variant={'outline'}
@@ -23,9 +21,9 @@ export function LogoutButton() {
                             variant={'outline'}
                             size={'compact-md'}
                             onClick={() => signOut()}
-                    >{session?.user?.email ? session.user.email.split('@')[0] : 'Польователь'}</Button>
+                    >{name}</Button>
                 </Group>
-            </Skeleton>
+            </>
     );
 }
 

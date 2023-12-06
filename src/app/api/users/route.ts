@@ -20,6 +20,12 @@ export async function POST(req: Request) {
             return NextResponse.json({message: 'Недостаточно прав'}, {status: 401})
         }
 
+        const initiator = await db.profile.findUnique({where: {id: session.user.sub}})
+
+        if (!initiator || initiator.Role !== 'ADMIN') {
+            return NextResponse.json({message: 'Недостаточно прав'}, {status: 403})
+        }
+
         const body = await req.json()
 
         const {email} = newUserSchema.parse(body)
@@ -37,7 +43,6 @@ export async function POST(req: Request) {
         }
 
         const token = hashPassword(email, process.env.HASH_SALT!)
-        const initiator = await db.profile.findFirstOrThrow({where: {email: session.user.email as string}})
 
         await sendEmail({
             to: email,

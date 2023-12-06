@@ -9,7 +9,8 @@ export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
     secret: process.env.NEXTAUTH_SECRET,
     session: {
-        strategy: 'jwt'
+        strategy: 'jwt',
+        maxAge: 2 * 60 * 60 /* 2 часа */,
     },
     pages: {
         signIn: PAGES_LINK.LOGIN
@@ -29,10 +30,19 @@ export const authOptions: NextAuthOptions = {
                 const existingProfile = await db.profile.findFirst({
                     where: {
                         email: credentials.email
-                    }
+                    },
                 })
                 if (!existingProfile || !existingProfile.password) {
                     return null
+                }
+
+                if (existingProfile.banned) {
+                    return {
+                        error: 'Ваш аккаунт заблокирован',
+                        id: existingProfile.id,
+                        email: existingProfile.email,
+                        role: existingProfile.Role,
+                    }
                 }
 
                 const passwordMatch = comparePassword(existingProfile.password, credentials.password, process.env.HASH_SALT!)
@@ -44,8 +54,27 @@ export const authOptions: NextAuthOptions = {
                 return {
                     id: existingProfile.id,
                     email: existingProfile.email,
+                    role: existingProfile.Role,
                 }
             }
         })
     ],
+    callbacks: {
+        signIn({user}) {
+            if (user?.error) {
+                throw new Error(user.error)
+            }
+
+            return true
+        },
+        jwt({token, user, trigger, session}) {
+            if (trigger === 'update') {
+                return {...token, ...session.user}
+            }
+            return {...token, ...user}
+        },
+        async session({session, token}) {
+            return {...session, user: token}
+        }
+    }
 }

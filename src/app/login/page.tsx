@@ -1,5 +1,5 @@
 import {Container} from "@mantine/core";
-import {CreatePasswordForm, LoginForm} from "@/components/loginPage";
+import {CreatePasswordForm, LoginForm} from "@/components/login";
 import {FormLayout} from "@/layouts";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";

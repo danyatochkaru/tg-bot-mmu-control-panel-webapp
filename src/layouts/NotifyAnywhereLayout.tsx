@@ -16,7 +16,10 @@ export function NotifyAnywhereLayout({children}: PropsWithChildren) {
                 message: searchParams.get('message'),
                 color: searchParams.get('messageColor') || 'brand'
             })
-            router.replace(pathname)
+            const sp = new URLSearchParams(searchParams.toString())
+            sp.delete('message')
+            sp.delete('messageColor')
+            router.replace(pathname + (sp.size > 0 ? `?${sp.toString()}` : ''))
         }
     }, [searchParams?.has('message')]);
 

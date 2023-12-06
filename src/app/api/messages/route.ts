@@ -3,6 +3,7 @@ import {authOptions} from "@/lib/auth";
 import {NextResponse} from "next/server";
 import db from "@/lib/db";
 import * as z from 'zod'
+import {Mailing} from "@prisma/client";
 
 const newMessageSchema = z.object({
     message: z.string(),
@@ -19,10 +20,19 @@ export async function GET(req: Request) {
 
         const url = new URL(req.url)
 
+        const orderBy: keyof Mailing = url.searchParams.has('orderBy') ? url.searchParams.get('orderBy') as keyof Mailing : 'createdAt'
+        const orderDir: 'asc' | 'desc' = url.searchParams.has('orderDir') ? url.searchParams.get('orderDir') as 'asc' | 'desc' : 'desc'
+
+        if (orderDir !== 'asc' && orderDir !== 'desc') {
+            return NextResponse.json({message: 'Неверные данные'}, {status: 400})
+        }
 
         const messages = await db.mailing.findMany({
             skip: url.searchParams.has('skip') ? parseInt(url.searchParams.get('skip')!) : 0,
             take: url.searchParams.has('take') ? parseInt(url.searchParams.get('take')!) : 12,
+            orderBy: {
+                [orderBy]: orderDir,
+            },
             include: {
                 sender: {
                     select: {

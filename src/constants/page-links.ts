@@ -1,4 +1,4 @@
-export const PAGES_LINK = {
+export const PAGE_LINKS = {
     HOME: '/',
     LOGIN: '/login',
     MESSAGES: '/messages',

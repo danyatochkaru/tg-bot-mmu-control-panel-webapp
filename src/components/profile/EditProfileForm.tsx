@@ -36,6 +36,10 @@ export function EditProfileForm({initValues, id, isSameProfile = false, banned =
             repeat_new_password: '',
             submit_password: '',
             ...initValues,
+        },
+        validate: {
+            new_password: (value, values) => value !== values.repeat_new_password ? 'Пароли не совпадают' : null,
+            repeat_new_password: (value, values) => value !== values.new_password ? 'Пароли не совпадают' : null,
         }
     })
     const router = useRouter()
@@ -53,7 +57,7 @@ export function EditProfileForm({initValues, id, isSameProfile = false, banned =
                 email: values.email,
                 password: values.submit_password || undefined,
                 new_password: values.new_password || undefined,
-                role: values.role,
+                role: values.role !== initValues?.role ? values.role : undefined,
             } as Partial<Profile> & {
                 new_password?: string
                 role?: Role

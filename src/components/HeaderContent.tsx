@@ -5,12 +5,12 @@ import {LogoutButton} from "@/components/LogoutButton";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 export async function HeaderContent() {
     const session = await getServerSession(authOptions)
     if (!session) {
-        return redirect(PAGES_LINK.LOGIN)
+        return redirect(PAGE_LINKS.LOGIN)
     }
 
     return (

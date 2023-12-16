@@ -4,18 +4,18 @@ import {FormLayout} from "@/layouts";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 async function NewProfilePage() {
     const session = await getServerSession(authOptions)
 
     if (!session) {
-        return redirect(PAGES_LINK.LOGIN)
+        return redirect(PAGE_LINKS.LOGIN)
     }
 
     if (session.user.role !== 'ADMIN') {
         const message = encodeURIComponent('Недостаточно прав')
-        return redirect(PAGES_LINK.HOME + `?message=${message}&messageColor=red`)
+        return redirect(PAGE_LINKS.HOME + `?message=${message}&messageColor=red`)
     }
 
     return (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 import {Anchor, AnchorProps, Flex, Text} from "@mantine/core";
 import {IconHandStop} from "@tabler/icons-react";
 
@@ -12,11 +12,11 @@ type Props = {
 }
 
 export function ProfileName({isMe, isBanned, email, id, short, ...props}: Props & AnchorProps) {
-    return <Anchor component={Link} href={PAGES_LINK.PROFILE + '?id=' + id}
+    return <Anchor component={Link} href={PAGE_LINKS.PROFILE + '?id=' + id}
                    c={'black'}
                    title={email}
                    underline={'never'}
-                   
+
                    {...props}
     >
         <Flex gap={'xs'} align={'baseline'} w={'fit-content'}>

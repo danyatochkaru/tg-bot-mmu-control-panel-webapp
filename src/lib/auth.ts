@@ -3,7 +3,7 @@ import {PrismaAdapter} from "@next-auth/prisma-adapter";
 import db from "@/lib/db";
 import Credentials from "next-auth/providers/credentials";
 import {comparePassword} from "@/utils/hashPassword";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
         maxAge: 2 * 60 * 60 /* 2 часа */,
     },
     pages: {
-        signIn: PAGES_LINK.LOGIN
+        signIn: PAGE_LINKS.LOGIN
     },
     providers: [
         Credentials({

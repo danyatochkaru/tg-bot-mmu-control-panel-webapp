@@ -6,7 +6,7 @@ import {useState} from "react";
 import {useToggle} from "@mantine/hooks";
 import {useRouter, useSearchParams} from "next/navigation";
 import {showNotification} from "@mantine/notifications";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 type CreatePasswordData = {
     password: string
@@ -44,7 +44,7 @@ export function CreatePasswordForm() {
                             message: 'Для продолжения войдите в профиль',
                             color: 'brand'
                         })
-                        router.push(PAGES_LINK.LOGIN)
+                        router.push(PAGE_LINKS.LOGIN)
                     } else {
                         res.json().then(r => {
                             setGlobalError(r.message || 'Пароль недостаточно сложный')

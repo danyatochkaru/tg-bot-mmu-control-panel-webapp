@@ -1,7 +1,7 @@
 import {Button, ButtonProps, Container, SimpleGrid} from "@mantine/core";
 import Link from "next/link";
 import {IconList, IconPlus, IconSettings} from "@tabler/icons-react";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 import {MessagesListModule} from "@/components/home";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
@@ -14,7 +14,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             fullWidth: true,
             leftSection: <IconPlus size={'1rem'}/>,
             component: Link,
-            href: PAGES_LINK.NEW_MESSAGE,
+            href: PAGE_LINKS.NEW_MESSAGE,
         },
         value: 'Новая рассылка',
         onlyAdmin: false,
@@ -24,7 +24,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             fullWidth: true,
             leftSection: <IconSettings size={'1rem'}/>,
             component: Link,
-            href: PAGES_LINK.PROFILE,
+            href: PAGE_LINKS.PROFILE,
             variant: 'default',
         },
         value: 'Настройки профиля',
@@ -35,7 +35,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             fullWidth: true,
             leftSection: <IconPlus size={'1rem'}/>,
             component: Link,
-            href: PAGES_LINK.NEW_PROFILE,
+            href: PAGE_LINKS.NEW_PROFILE,
             variant: 'default',
         },
         value: 'Новый профиль',
@@ -46,7 +46,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             fullWidth: true,
             leftSection: <IconList size={'1rem'}/>,
             component: Link,
-            href: PAGES_LINK.PROFILE_LIST,
+            href: PAGE_LINKS.PROFILE_LIST,
             variant: 'default',
         },
         value: 'Список всех профилей',
@@ -58,7 +58,7 @@ export default async function Home() {
     const session = await getServerSession(authOptions)
 
     if (!session) {
-        return redirect(PAGES_LINK.LOGIN)
+        return redirect(PAGE_LINKS.LOGIN)
     }
 
     const calcColumCount = (length: number, maxCount: number = 4) => {

@@ -10,8 +10,9 @@ import {Placeholder} from "@tiptap/extension-placeholder";
 import {Underline} from "@tiptap/extension-underline";
 import {useToggle} from "@mantine/hooks";
 import {useRouter} from "next/navigation";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 import {useFiltersStore} from "@/store/filters";
+import {NodeHtmlMarkdown} from "node-html-markdown";
 
 type FormValues = {
     message: string
@@ -34,7 +35,7 @@ export function PrintingModule() {
             Underline,
             Placeholder.configure({placeholder: 'Введите сообщение'})
         ],
-        onUpdate: ({editor}) => form.setFieldValue('message', editor.getHTML())
+        onUpdate: ({editor}) => form.setFieldValue('message', NodeHtmlMarkdown.translate(editor.getHTML()))
     })
 
     const handleSubmit = (values: FormValues) => {
@@ -51,10 +52,10 @@ export function PrintingModule() {
 
                     res.json().then(data => {
                         if (ok) {
-                            router.push(PAGES_LINK.HOME + (data.message ? `?message=${data.message}&messageColor=green` : ''))
+                            router.push(PAGE_LINKS.HOME + (data.message ? `?message=${data.message}&messageColor=green` : ''))
                         } else {
                             const message = data.message ?? 'Произошла неизвестаня ошибка'
-                            router.push(PAGES_LINK.NEW_MESSAGE_PRINTING + `&message=${message}&messageColor=red`)
+                            router.push(PAGE_LINKS.NEW_MESSAGE_PRINTING + `&message=${message}&messageColor=red`)
 
                         }
                     })

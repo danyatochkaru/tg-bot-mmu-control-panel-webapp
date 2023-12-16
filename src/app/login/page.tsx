@@ -4,7 +4,7 @@ import {FormLayout} from "@/layouts";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 async function fetchRequest(token: string) {
     const resRequest = await fetch(process.env.NEXTAUTH_URL + '/api/requests/check?token=' + token)
@@ -16,13 +16,13 @@ async function LoginPage(props: { searchParams: { token?: string } }) {
     const session = await getServerSession(authOptions)
 
     if (!!session?.user) {
-        redirect(PAGES_LINK.HOME)
+        redirect(PAGE_LINKS.HOME)
     }
 
     if (props.searchParams.token) {
         const {data, status} = await fetchRequest(props.searchParams.token)
         if (!status) {
-            redirect(PAGES_LINK.LOGIN + (data?.message ? `?message=${encodeURIComponent(data.message)}&messageColor=red` : ''))
+            redirect(PAGE_LINKS.LOGIN + (data?.message ? `?message=${encodeURIComponent(data.message)}&messageColor=red` : ''))
         }
     }
 

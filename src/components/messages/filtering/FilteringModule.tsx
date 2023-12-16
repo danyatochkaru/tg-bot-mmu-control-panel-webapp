@@ -6,7 +6,7 @@ import IGroup from '@/types/group'
 import {useFilteringManager} from "@/hooks/useFilteringManager";
 import endingByNum from "@/utils/endingByNum";
 import {useRouter} from "next/navigation";
-import {PAGES_LINK} from "@/constants/PAGES_LINK";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 export function FilteringModule(props: { groups: IGroup[] }) {
     const {groups, clear} = useFilteringManager(props.groups)
@@ -29,7 +29,7 @@ export function FilteringModule(props: { groups: IGroup[] }) {
                         >Очистить</Button>
                     </Group>
                     <Button disabled={!groups.length}
-                            onClick={() => router.push(PAGES_LINK.NEW_MESSAGE_PRINTING)}
+                            onClick={() => router.push(PAGE_LINKS.NEW_MESSAGE_PRINTING)}
                     >Далее</Button>
                 </Flex>
             </Container>

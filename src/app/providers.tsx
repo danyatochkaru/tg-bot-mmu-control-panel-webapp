@@ -5,6 +5,7 @@ import {SessionProvider} from "next-auth/react";
 import {TelegramProvider} from "@/app/TelegramProvider";
 import {PropsWithChildren} from "react";
 import {SWRConfig} from "swr";
+import {ModalsProvider} from "@mantine/modals";
 
 const NotoSansFont = Noto_Sans({weight: ["200", "400", "500", '600'], subsets: ['cyrillic', 'latin']})
 
@@ -14,7 +15,7 @@ const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export function Providers({children}: PropsWithChildren) {
     return (
-            <MantineProvider theme={{
+            <MantineProvider defaultColorScheme={'light'} theme={{
                 fontFamily: NotoSansFont.style.fontFamily,
                 colors: {
                     brand: [
@@ -34,15 +35,17 @@ export function Providers({children}: PropsWithChildren) {
                 primaryShade: 6,
                 defaultRadius: 'xs',
             }}>
-                <SessionProvider>
-                    <TelegramProvider>
-                        <SWRConfig value={{
-                            fetcher,
-                        }}>
-                            {children}
-                        </SWRConfig>
-                    </TelegramProvider>
-                </SessionProvider>
+                <ModalsProvider>
+                    <SessionProvider>
+                        <TelegramProvider>
+                            <SWRConfig value={{
+                                fetcher,
+                            }}>
+                                {children}
+                            </SWRConfig>
+                        </TelegramProvider>
+                    </SessionProvider>
+                </ModalsProvider>
             </MantineProvider>
     );
 }

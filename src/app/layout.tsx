@@ -20,7 +20,7 @@ export default async function RootLayout({children}: PropsWithChildren) {
             <html lang="ru">
             <head>
                 <meta name={'author'} content={'danyatochkaru'}/>
-                <ColorSchemeScript/>
+                <ColorSchemeScript defaultColorScheme={'light'}/>
             </head>
             <body>
             <Providers>

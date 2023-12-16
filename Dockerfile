@@ -1,7 +1,7 @@
 FROM node:lts-alpine
 WORKDIR /app
 RUN corepack enable
-COPY package.json yarn.lock .yarn .yarnrc.yml ./
+COPY package.json yarn.lock .yarnrc.yml ./
 RUN yarn set version berry
 RUN yarn
 COPY . .

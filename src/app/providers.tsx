@@ -1,11 +1,14 @@
 "use client"
+
 import {Noto_Sans} from "next/font/google";
 import {MantineProvider} from "@mantine/core";
 import {SessionProvider} from "next-auth/react";
-import {TelegramProvider} from "@/app/TelegramProvider";
 import {PropsWithChildren} from "react";
 import {SWRConfig} from "swr";
 import {ModalsProvider} from "@mantine/modals";
+import {DatesProvider} from "@mantine/dates";
+
+import 'dayjs/locale/ru';
 
 const NotoSansFont = Noto_Sans({weight: ["200", "400", "500", '600'], subsets: ['cyrillic', 'latin']})
 
@@ -36,15 +39,17 @@ export function Providers({children}: PropsWithChildren) {
                 defaultRadius: 'xs',
             }}>
                 <ModalsProvider>
-                    <SessionProvider>
-                        <TelegramProvider>
+                    <DatesProvider settings={{locale: 'ru', timezone: 'Europe/Moscow'}}>
+                        <SessionProvider>
+                            {/*<TelegramProvider>*/}
                             <SWRConfig value={{
                                 fetcher,
                             }}>
                                 {children}
                             </SWRConfig>
-                        </TelegramProvider>
-                    </SessionProvider>
+                            {/*</TelegramProvider>*/}
+                        </SessionProvider>
+                    </DatesProvider>
                 </ModalsProvider>
             </MantineProvider>
     );

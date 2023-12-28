@@ -7,10 +7,22 @@ import {useFilteringManager} from "@/hooks/useFilteringManager";
 import endingByNum from "@/utils/endingByNum";
 import {useRouter} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
+import {useEffect, useState} from "react";
+import LoadingNewMessage from "@/app/(with-appshell)/messages/new/loading";
 
 export function FilteringModule(props: { groups: IGroup[] }) {
     const {groups, clear} = useFilteringManager(props.groups)
     const router = useRouter()
+
+    const [init, setInit] = useState(false)
+
+    useEffect(() => {
+        setInit(true)
+    }, []);
+
+    if (!init) {
+        return <LoadingNewMessage/>
+    }
 
     return <>
         <Container p={'md'}>
@@ -18,7 +30,7 @@ export function FilteringModule(props: { groups: IGroup[] }) {
             <Divider my="sm" label={'Группы'}/>
             <FilteringResultList/>
         </Container>
-        <AppShell.Footer>
+        <AppShell.Footer bg={'gray.0'}>
             <Container>
                 <Flex h={50} justify={'space-between'} align={'center'}>
                     <Group align={'center'}>

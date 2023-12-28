@@ -1,16 +1,18 @@
+import LoadingNewMessage from "@/app/(with-appshell)/messages/new/loading";
+import {Suspense} from "react";
 import {FilteringModule, PrintingModule} from "@/components/messages";
 import {GROUPS} from "@/constants/groups";
-import {redirect} from "next/navigation";
-import {PAGE_LINKS} from "@/constants/page-links";
 
-export default function NewMessagePage(props: { searchParams: { step?: string } }) {
-    if (props.searchParams.step === 'filtering') {
-        return <FilteringModule groups={GROUPS}/>
+export default async function NewMessagePage(props: { searchParams: { step?: string } }) {
+    switch (props.searchParams.step) {
+        case 'printing': {
+            return <PrintingModule/>
+        }
+        case 'filtering':
+        default: {
+            return <Suspense fallback={<LoadingNewMessage/>}>
+                <FilteringModule groups={GROUPS}/>
+            </Suspense>
+        }
     }
-
-    if (props.searchParams.step === 'printing') {
-        return <PrintingModule/>
-    }
-
-    return redirect(PAGE_LINKS.NEW_MESSAGE_FILTERING)
 }

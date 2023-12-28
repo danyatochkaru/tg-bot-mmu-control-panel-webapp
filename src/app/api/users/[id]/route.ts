@@ -1,10 +1,9 @@
 import {NextResponse} from "next/server";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/lib/auth";
 import * as z from "zod";
 import {Role} from "@prisma/client";
 import db from "@/lib/db";
 import {comparePassword, hashPassword} from "@/utils/hashPassword";
+import checkSession from "@/utils/checkSession";
 
 const editUserSchema = z.object({
     email: z.string().email(),
@@ -15,10 +14,9 @@ const editUserSchema = z.object({
 
 export async function PATCH(req: Request, {params}: { params: { id: string } }) {
     try {
-        const session = await getServerSession(authOptions)
-
-        if (!session || !session.user) {
-            return NextResponse.json({message: 'Недостаточно прав'}, {status: 401})
+        const session = await checkSession()
+        if (!session.data) {
+            return NextResponse.json(session.error, {status: session.status})
         }
 
         const body = await req.json()
@@ -27,7 +25,7 @@ export async function PATCH(req: Request, {params}: { params: { id: string } }) 
 
         const [existingProfile, editor] = await Promise.all([
             db.profile.findUnique({where: {id: params.id}}),
-            db.profile.findUnique({where: {id: session.user.sub}}),
+            db.profile.findUnique({where: {id: session.data.user.sub}}),
         ])
 
         if (!existingProfile || !editor) {

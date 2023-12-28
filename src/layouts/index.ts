@@ -1,2 +1,2 @@
-export {FormLayout} from './formLayout'
+export {FormLayout} from './FormLayout'
 export {NotifyAnywhereLayout} from './NotifyAnywhereLayout'

@@ -16,7 +16,7 @@ export default async function Layout({children}: PropsWithChildren) {
             header={{height: 50}}
             footer={{height: 50}}
     >
-        <AppShellHeader><HeaderContent/></AppShellHeader>
+        <AppShellHeader bg={'gray.0'}><HeaderContent/></AppShellHeader>
         <AppShellMain>
             {children}
         </AppShellMain>

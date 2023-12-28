@@ -1,6 +1,6 @@
 "use client"
 
-import {AppShell, Button, Container, Flex} from "@mantine/core";
+import {AppShell, Button, Container, Flex, Progress, Stack, Text} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {RichTextEditor} from "@mantine/tiptap";
 import {useEditor} from "@tiptap/react";
@@ -13,6 +13,9 @@ import {useRouter} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
 import {useFiltersStore} from "@/store/filters";
 import {NodeHtmlMarkdown} from "node-html-markdown";
+import useSWR from "swr";
+import {useEffect} from "react";
+import endingByNum from "@/utils/endingByNum";
 
 type FormValues = {
     message: string
@@ -65,6 +68,30 @@ export function PrintingModule() {
                 })
     }
 
+    const {data, isLoading} = useSWR<{
+        isRunning: boolean
+        progress: {
+            current: number
+            total: number
+            rejected: number
+        }
+    }>(
+            `/api/messages/status`,
+            {refreshInterval: 5 * 1000}
+    )
+    const {data: usersCount} = useSWR<{
+        groups: Record<string, number>,
+        total: number
+    }>(
+            `/api/users/countbygroups?groups=${selectedGroups.join(',')}`,
+            {refreshInterval: 5 * 60 * 1000}
+    )
+
+
+    useEffect(() => {
+        console.log(data, isLoading)
+    }, [data, isLoading]);
+
     return <>
         <Container p={'md'}>
             <RichTextEditor editor={editor} labels={{
@@ -99,12 +126,33 @@ export function PrintingModule() {
 
                 <RichTextEditor.Content/>
             </RichTextEditor>
+
+            <Stack my={'md'}>
+                <Text>
+                    {`В данный момент ${data?.isRunning ? 'идёт рассылка' : 'можно запустить рассылку'}`}
+                </Text>
+                {(!isLoading && data?.isRunning)
+                        && <Stack gap={2}>
+                            <Text
+                                    size={'xs'}>{`${(data?.progress.current! / data?.progress.total! * 100).toFixed(1)}%`}</Text>
+                            <Progress
+                                    value={parseFloat((data?.progress.current! / data?.progress.total! * 100).toFixed(1))}
+                                    animated
+                            />
+                        </Stack>}
+                <Text hidden={!usersCount}>
+                    {`Сообщение будет отправлено ${usersCount?.total} ${endingByNum(usersCount?.total ?? 0, ['человеку', 'людям', 'человек'])}`}
+                </Text>
+                <Text size={'sm'} hidden={isLoading || data?.progress?.rejected! == 0}>
+                    {`Не удалось отправить ${data?.progress.rejected} ${endingByNum(data?.progress?.rejected!, ['человеку', 'людям', 'человек'])}`}
+                </Text>
+            </Stack>
         </Container>
-        <AppShell.Footer>
+        <AppShell.Footer bg={'gray.0'}>
             <Container>
                 <Flex h={50} justify={'space-between'} align={'center'}>
                     <Button onClick={() => router.back()} variant={'default'}>Назад</Button>
-                    <Button disabled={form.values['message'].trim() === ''}
+                    <Button disabled={form.values['message'].trim() === '' || data?.isRunning}
                             loading={loading}
                             onClick={() => handleSubmit(form.values)}
                     >Отправить</Button>

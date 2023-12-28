@@ -1,12 +1,18 @@
 "use client"
 
-import {Button, Chip, Group, SimpleGrid, Stack, Text} from "@mantine/core";
+import {Button, Chip, Group, SimpleGrid, Skeleton, Stack, Text} from "@mantine/core";
 import {useFiltersStore} from "@/store/filters";
 import {useGroupsStore} from "@/store/groups";
+import {useEffect, useState} from "react";
 
 export function FilteringResultList() {
     const filtersStore = useFiltersStore()
     const groups = useGroupsStore(state => state.groups)
+    const [init, setInit] = useState(false)
+
+    useEffect(() => {
+        setInit(true)
+    }, []);
 
     const GroupChip = ({name, groupOid}: any) => <Chip
             width={'fit-content'}
@@ -19,6 +25,14 @@ export function FilteringResultList() {
                                 : [...filtersStore.selectedGroups, groupOid]
                 )
             }}>{name}</Chip>
+
+    if (!init) {
+        const groupsPlaceholder = Array(34).fill('GroupName')
+        return <SimpleGrid cols={{base: 2, xs: 4, sm: 5, md: 6}}>
+            {groupsPlaceholder.map((i, index) => (
+                    <Skeleton key={index} w={'fit-content'}><Chip variant={'outline'}>{i}</Chip></Skeleton>))}
+        </SimpleGrid>
+    }
 
     return (
             <Stack>

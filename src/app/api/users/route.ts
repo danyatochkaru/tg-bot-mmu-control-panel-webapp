@@ -5,8 +5,7 @@ import {render} from "@react-email/render";
 import EmailInvite from "../../../../emails/EmailInvite";
 import {hashPassword} from "@/utils/hashPassword";
 import db from "@/lib/db";
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/lib/auth";
+import checkSession from "@/utils/checkSession";
 
 const newUserSchema = z.object({
     email: z.string().email(),
@@ -14,16 +13,9 @@ const newUserSchema = z.object({
 
 export async function POST(req: Request) {
     try {
-        const session = await getServerSession(authOptions)
-
-        if (!session || !session.user) {
-            return NextResponse.json({message: 'Недостаточно прав'}, {status: 401})
-        }
-
-        const initiator = await db.profile.findUnique({where: {id: session.user.sub}})
-
-        if (!initiator || initiator.Role !== 'ADMIN') {
-            return NextResponse.json({message: 'Недостаточно прав'}, {status: 403})
+        const session = await checkSession(true)
+        if (!session.data) {
+            return NextResponse.json(session.error, {status: session.status!})
         }
 
         const body = await req.json()
@@ -53,7 +45,10 @@ export async function POST(req: Request) {
         const now = new Date()
         await db.invite.create({
             data: {
-                email, token, expiresAt: new Date(now.setDate(now.getDate() + 7)), initiatorId: initiator.id
+                email,
+                token,
+                expiresAt: new Date(now.setDate(now.getDate() + 7)),
+                initiatorId: session.data.user.id,
             }
         })
 

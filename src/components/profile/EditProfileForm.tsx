@@ -107,7 +107,7 @@ export function EditProfileForm({initValues, id, isSameProfile = false, banned =
         <Stack>
             <Group gap={0}>
                 <Text fw={700} size={'lg'}>Настройки профиля</Text>
-                {!isSameProfile && <Text size={'sm'}>Вы изменяете чужой профиль</Text>}
+                {!isSameProfile && <Text c={'red.4'} size={'sm'}>Вы изменяете чужой профиль</Text>}
             </Group>
             <Select
                     label={isSameProfile ? 'Ваша роль' : 'Роль данного профиля'}

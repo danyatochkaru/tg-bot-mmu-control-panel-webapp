@@ -51,6 +51,18 @@ export async function GET(req: Request) {
             ]
         }
 
+        if (url.searchParams.has('sender')) {
+            if (!where.AND) where.AND = []
+            where.AND = [
+                ...where.AND as MailingWhereInput[],
+                {
+                    sender: {
+                        email: url.searchParams.get('sender')!.trim()
+                    }
+                }
+            ]
+        }
+
 
         const messages = await db.mailing.findMany({
             where,

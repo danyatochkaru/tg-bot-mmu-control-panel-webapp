@@ -7,6 +7,7 @@ const SORTING_BY_DATE = 'sort-date'
 const FILTERING_HISTORY_WINDOW = 'filter-history'
 const PAGE = 'page'
 const FILTERING_DATES = 'filter-date'
+const FILTERING_SENDER = 'filter-sender'
 
 export const useFilteringQueryString = (options?: Options) => {
     const searchParams = useSearchParams()
@@ -69,6 +70,11 @@ export const useFilteringQueryString = (options?: Options) => {
             const dates = url?.searchParams.getAll(FILTERING_DATES)
             sp.append('date', dates[0])
             sp.append('date', dates[dates.length - 1])
+        }
+
+        if (url?.searchParams.has(FILTERING_SENDER)) {
+            const sender = url?.searchParams.get(FILTERING_SENDER)!
+            sp.set('sender', sender)
         }
 
         return sp.toString()

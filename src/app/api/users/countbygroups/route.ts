@@ -22,8 +22,6 @@ export async function GET(req: Request) {
             sp.append('groupsList', groupId)
         }
 
-        console.log(sp.toString())
-
         const res = await fetch(`${process.env.BOT_API_HOST}/users/count?${sp.toString()}`, {
             headers: {
                 'Content-Type': 'application/json',

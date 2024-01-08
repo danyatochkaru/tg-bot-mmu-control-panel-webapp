@@ -1,4 +1,4 @@
-import {Checkbox, Stack} from "@mantine/core";
+import {Stack, Switch} from "@mantine/core";
 import {DatePickerInput, DatesRangeValue, DateValue} from "@mantine/dates";
 import {IconX} from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -57,9 +57,13 @@ export function DateFilteringInput() {
                              handleDateChange(value)
                          }}
         />
-        <Checkbox label={'Диапозон дат'}
-                  checked={sp.getAll('filter-date').length > 1 || isRange}
-                  onChange={() => toggleIsRange()}
+        <Switch
+                label={'Диапозон дат'}
+                checked={sp.getAll('filter-date').length > 1 || isRange}
+                onChange={() => {
+                    isRange && handleDateChange(null)
+                    toggleIsRange()
+                }}
         />
     </Stack>
 }

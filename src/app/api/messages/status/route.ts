@@ -13,19 +13,14 @@ export async function GET() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${process.env.BOT_AUTH_TOKEN}`,
             }
-        }).catch(err => {
-            console.error(err)
-            return err
         })
-
-        const data = await res.json()
-
+        
         if (!res?.ok) {
             console.log(res)
-            console.log(data)
             return NextResponse.json({message: 'Что-то пошло не так...'}, {status: res?.status || 500})
         }
 
+        const data = await res.json()
 
         return NextResponse.json(data, {status: 200})
     } catch (e) {

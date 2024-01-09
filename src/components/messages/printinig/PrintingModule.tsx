@@ -126,27 +126,29 @@ export function PrintingModule() {
 
                 <RichTextEditor.Content/>
             </RichTextEditor>
+            {data
+                    ? <Stack my={'md'}>
 
-            <Stack my={'md'}>
-                <Text>
-                    {`В данный момент ${data?.isRunning ? 'идёт рассылка' : 'можно запустить рассылку'}`}
-                </Text>
-                {(!isLoading && data?.isRunning)
-                        && <Stack gap={2}>
-                            <Text
-                                    size={'xs'}>{`${(data?.progress.current! / data?.progress.total! * 100).toFixed(1)}%`}</Text>
-                            <Progress
-                                    value={parseFloat((data?.progress.current! / data?.progress.total! * 100).toFixed(1))}
-                                    animated
-                            />
-                        </Stack>}
-                <Text hidden={!usersCount}>
-                    {`Сообщение будет отправлено ${usersCount?.total} ${endingByNum(usersCount?.total ?? 0, ['человеку', 'людям', 'человек'])}`}
-                </Text>
-                <Text size={'sm'} hidden={isLoading || data?.progress?.rejected! == 0}>
-                    {`Не удалось отправить ${data?.progress?.rejected} ${endingByNum(data?.progress?.rejected!, ['человеку', 'людям', 'человек'])}`}
-                </Text>
-            </Stack>
+                        <Text>
+                            {`В данный момент ${data?.isRunning ? 'идёт рассылка' : 'можно запустить рассылку'}`}
+                        </Text>
+                        {(!isLoading && data?.isRunning)
+                                && <Stack gap={2}>
+                                    <Text
+                                            size={'xs'}>{`${(data?.progress.current! / data?.progress.total! * 100).toFixed(1)}%`}</Text>
+                                    <Progress
+                                            value={parseFloat((data?.progress.current! / data?.progress.total! * 100).toFixed(1))}
+                                            animated
+                                    />
+                                </Stack>}
+                        <Text hidden={!usersCount}>
+                            {`Сообщение будет отправлено ${usersCount?.total} ${endingByNum(usersCount?.total ?? 0, ['человеку', 'людям', 'человек'])}`}
+                        </Text>
+                        <Text size={'sm'} hidden={isLoading || data?.progress?.rejected! == 0}>
+                            {`Не удалось отправить ${data?.progress?.rejected} ${endingByNum(data?.progress?.rejected!, ['человеку', 'людям', 'человек'])}`}
+                        </Text>
+                    </Stack>
+                    : <Text my={'md'}>Получение статуса...</Text>}
         </Container>
         <AppShell.Footer bg={'gray.0'}>
             <Container>

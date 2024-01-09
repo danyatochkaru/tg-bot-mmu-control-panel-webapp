@@ -49,7 +49,7 @@ export function DateFilteringInput() {
                                          ]
                                          : dayjs(sp.get('filter-date')).toDate()
                                  : (sp.getAll('filter-date').length > 1 || isRange) ? [null, null] : null}
-                         placeholder={`Выберите ${(sp.getAll('filter-date').length > 1 || isRange) ? 'диапозон дат' : 'дату'}`}
+                         placeholder={`Выберите ${(sp.getAll('filter-date').length > 1 || isRange) ? 'диапазон дат' : 'дату'}`}
                          onChange={value => {
                              if (Array.isArray(value) && value.every(i => i === null)) {
                                  return
@@ -58,7 +58,7 @@ export function DateFilteringInput() {
                          }}
         />
         <Switch
-                label={'Диапозон дат'}
+                label={'Диапазон дат'}
                 checked={sp.getAll('filter-date').length > 1 || isRange}
                 onChange={() => {
                     isRange && handleDateChange(null)

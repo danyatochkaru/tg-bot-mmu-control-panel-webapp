@@ -22,6 +22,9 @@ export function FilteringDrawer() {
             }
         }
 
+        // Закрытие окна с фильрацией
+        params.delete('window', 'filter-history')
+
         router.push(pathname + "?" + params.toString())
     }
 
@@ -32,7 +35,7 @@ export function FilteringDrawer() {
     }
 
     return <Drawer position={'right'} title={<Text fw={600} fz={rem(18)}>Настройка фильтров</Text>}
-                   opened={sp.has('window') && sp.get('window')! === 'filter-history'}
+                   opened={sp.has('window') && sp.get('window') as string === 'filter-history'}
                    onClose={close}>
         <Stack>
             {/*<Text fw={600}>Сортировка</Text>*/}

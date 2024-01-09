@@ -19,11 +19,6 @@ export function SearchSenderInput() {
                     : ''
     )
     const [searchValue] = useDebouncedValue(searchProfileValue, 500, {leading: true})
-    const [userSelect, setUserSelect] = useState<string>(
-            sp.has('filter-sender')
-                    ? sp.get('filter-sender')!
-                    : ''
-    )
 
     const searchUser = async (email: string) => {
         if (email === '') {
@@ -41,11 +36,16 @@ export function SearchSenderInput() {
                 })
     }
 
-    useEffect(() => {
+    const handleSenderSelect = (email: string | null) => {
         const params = new URLSearchParams(sp.toString())
-        userSelect ? params.set('filter-sender', userSelect) : params.delete('filter-sender')
+        if (email) {
+            params.set('filter-sender', email)
+        } else {
+            params.delete('filter-sender')
+            setSearchProfileValue('')
+        }
         router.push(pathname + "?" + params.toString())
-    }, [userSelect]);
+    }
 
     useEffect(() => {
         toggleIsSearching(true)
@@ -59,8 +59,10 @@ export function SearchSenderInput() {
                    checkIconPosition={'right'}
                    searchable
                    clearable
-                   value={userSelect}
-                   onChange={(value) => setUserSelect(value ?? '')}
+                   value={sp.has('filter-sender')
+                           ? sp.get('filter-sender')!
+                           : ''}
+                   onChange={handleSenderSelect}
                    searchValue={searchProfileValue}
                    onSearchChange={setSearchProfileValue}
                    nothingFoundMessage={searchValue.length > 0

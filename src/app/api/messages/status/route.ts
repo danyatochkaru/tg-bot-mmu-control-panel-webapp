@@ -14,9 +14,9 @@ export async function GET() {
                 'Authorization': `Bearer ${process.env.BOT_AUTH_TOKEN}`,
             }
         })
-        
+
         if (!res?.ok) {
-            console.log(res)
+            console.error(res)
             return NextResponse.json({message: 'Что-то пошло не так...'}, {status: res?.status || 500})
         }
 

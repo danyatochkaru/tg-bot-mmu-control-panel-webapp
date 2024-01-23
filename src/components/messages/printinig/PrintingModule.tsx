@@ -14,12 +14,14 @@ import {PAGE_LINKS} from "@/constants/page-links";
 import {useFiltersStore} from "@/store/filters";
 import {NodeHtmlMarkdown} from "node-html-markdown";
 import useSWR from "swr";
-import {useEffect} from "react";
 import endingByNum from "@/utils/endingByNum";
+import {CharacterCount} from "@tiptap/extension-character-count";
 
 type FormValues = {
     message: string
 }
+
+const characterLimit = 4000;
 
 export function PrintingModule() {
     const [loading, toggleLoading] = useToggle()
@@ -36,7 +38,11 @@ export function PrintingModule() {
             StarterKit,
             Link.configure({openOnClick: false}),
             Underline,
-            Placeholder.configure({placeholder: 'Введите сообщение'})
+            Placeholder.configure({placeholder: 'Введите сообщение'}),
+            CharacterCount.configure({
+                limit: characterLimit,
+                mode: 'textSize',
+            })
         ],
         onUpdate: ({editor}) => form.setFieldValue('message', NodeHtmlMarkdown.translate(editor.getHTML()))
     })
@@ -87,11 +93,6 @@ export function PrintingModule() {
             {refreshInterval: 5 * 60 * 1000}
     )
 
-
-    useEffect(() => {
-        console.log(data, isLoading)
-    }, [data, isLoading]);
-
     return <>
         <Container p={'md'}>
             <RichTextEditor editor={editor} labels={{
@@ -126,6 +127,15 @@ export function PrintingModule() {
 
                 <RichTextEditor.Content/>
             </RichTextEditor>
+            <Flex justify={'flex-end'}>
+                <Text size={'sm'}
+                      c={editor?.storage.characterCount.characters() > (characterLimit - characterLimit * 0.05)
+                              ? editor?.storage.characterCount.characters() === characterLimit ? 'red' : 'red.4'
+                              : 'gray.5'}
+                >
+                    {editor?.storage.characterCount.characters()}/{characterLimit}
+                </Text>
+            </Flex>
             {data
                     ? <Stack my={'md'}>
 

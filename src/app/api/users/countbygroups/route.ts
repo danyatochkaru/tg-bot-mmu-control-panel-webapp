@@ -31,10 +31,10 @@ export async function GET(req: Request) {
 
 
         if (!res?.ok) {
-            console.log(res)
+            console.error(res)
             return NextResponse.json({message: 'Что-то пошло не так...'}, {status: res?.status || 500})
         }
-        
+
         const data = await res.json()
 
         return NextResponse.json(data, {status: 200})

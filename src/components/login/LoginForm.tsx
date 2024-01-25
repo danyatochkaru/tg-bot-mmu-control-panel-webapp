@@ -1,11 +1,13 @@
 "use client"
 
-import {Button, Group, PasswordInput, Stack, Text, TextInput} from "@mantine/core";
+import {Anchor, Button, Group, PasswordInput, Stack, Text, TextInput} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {signIn} from "next-auth/react";
 import {useState} from "react";
 import {useToggle} from "@mantine/hooks";
 import {useRouter, useSearchParams} from "next/navigation";
+import Link from "next/link";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 type LoginData = {
     email: string,
@@ -52,17 +54,22 @@ export function LoginForm() {
             <TextInput
                     label={'Почта'}
                     type={'email'}
+                    autoComplete={'email'}
                     {...form.getInputProps('email')}
                     placeholder={'Введите почту'}
                     error={!!globalError && !form.isTouched('email')}
             />
             <PasswordInput
                     placeholder={'Введите пароль'}
+                    autoComplete={'password'}
                     {...form.getInputProps('password')}
                     label={'Пароль'}
                     error={!!globalError && !form.isTouched('password')}
             />
             {globalError && <Text size={'sm'} c={'red'} ta={'center'}>{globalError}</Text>}
+            {globalError === 'Неверная почта или пароль' &&
+                    <Anchor size={'sm'} ta={'center'} href={PAGE_LINKS.RECOVERY} component={Link}>Забыли
+                        пароль?</Anchor>}
         </Stack>
         <Group w={'100%'} justify={'center'}>
             <Button loading={loading} type={'submit'}>Войти</Button>

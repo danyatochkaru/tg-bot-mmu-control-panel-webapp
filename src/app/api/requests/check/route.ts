@@ -17,11 +17,12 @@ export async function GET(req: Request) {
         }
 
         if (existingRequest.expiresAt < new Date()) {
+            await db.invite.delete({where: {id: existingRequest.id}})
             return NextResponse.json({message: 'Запрос устарел'}, {status: 410})
         }
 
 
-        return NextResponse.json({message: 'Пароль успешно установлен'}, {status: 200})
+        return NextResponse.json({status: "OK"}, {status: 200})
     } catch (e: any | Error) {
         console.error(e)
         return NextResponse.json({message: 'Что-то пошло не так'}, {status: 500})

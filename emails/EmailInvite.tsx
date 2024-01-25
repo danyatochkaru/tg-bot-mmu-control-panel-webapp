@@ -12,7 +12,7 @@ export default function EmailInvite(token: Invite['token']) {
                 <Section style={{backgroundColor: '#fff'}}>
                     <Container>
                         <Text>Вы были приглашены в систему отправки рассылки бота ММУ.</Text>
-                        <Text>Чтобы принять приглашения, нажмите на кнопку {'"Принять"'} ниже:</Text>
+                        <Text>Чтобы принять приглашение, нажмите на кнопку {'"Принять"'} ниже:</Text>
                         <Link style={{color: '#ffd600', textDecoration: 'underline', textUnderlinePosition: 'under'}}
                               href={`${process.env.NEXTAUTH_URL + PAGE_LINKS.LOGIN}?token=${token}`}>Принять</Link>
                     </Container>

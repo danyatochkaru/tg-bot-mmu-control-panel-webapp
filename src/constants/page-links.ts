@@ -1,6 +1,7 @@
 export const PAGE_LINKS = {
     HOME: '/',
     LOGIN: '/login',
+    RECOVERY: '/recovery',
     MESSAGES: '/messages',
     NEW_MESSAGE: '/messages/new',
     NEW_MESSAGE_FILTERING: '/messages/new?step=filtering',

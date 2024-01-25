@@ -16,7 +16,6 @@ export function ProfileName({isMe, isBanned, email, id, short, ...props}: Props 
                    c={'black'}
                    title={email}
                    underline={'never'}
-
                    {...props}
     >
         <Flex gap={'xs'} align={'baseline'} w={'fit-content'}>

@@ -14,16 +14,17 @@ enum Role {
 }
 
 model Profile {
-    id        String    @id @default(uuid())
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    email     String    @unique
+    id        String     @id @default(uuid())
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    email     String     @unique
     password  String
     tgId      String?
     banned    DateTime?
     Mailing   Mailing[]
     Invite    Invite[]
-    Role      Role      @default(USER)
+    Role      Role       @default(USER)
+    Recovery  Recovery[]
 }
 
 model Invite {
@@ -43,4 +44,13 @@ model Mailing {
     senderId   String
     createdAt  DateTime @default(now())
     sender     Profile  @relation(fields: [senderId], references: [id])
+}
+
+model Recovery {
+    id        String   @id @default(uuid())
+    token     String   @unique
+    createdAt DateTime @default(now())
+    expiresAt DateTime
+    profileId String
+    profile   Profile  @relation(fields: [profileId], references: [id])
 }

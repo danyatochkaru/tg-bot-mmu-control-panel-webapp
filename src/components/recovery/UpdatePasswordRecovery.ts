@@ -16,7 +16,8 @@ export async function updatePasswordRecovery(state: { message: string }, formDat
         body: JSON.stringify({
             token: formData.get('token'),
             password: formData.get('confirmPassword'),
-        })
+        }),
+        cache: 'no-store'
     })
 
     const url = new URL(process.env.NEXTAUTH_URL)

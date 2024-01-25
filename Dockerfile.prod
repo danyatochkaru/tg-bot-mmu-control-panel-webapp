@@ -11,6 +11,7 @@ WORKDIR /app
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
 RUN yarn set version berry
+RUN yarn dlx prisma migrate deploy
 RUN yarn dlx prisma generate
 RUN yarn build
 

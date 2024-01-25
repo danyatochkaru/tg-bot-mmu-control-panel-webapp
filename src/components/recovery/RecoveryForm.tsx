@@ -14,7 +14,8 @@ async function createRecovery(fd: FormData) {
         },
         body: JSON.stringify({
             email: fd.get('email'),
-        })
+        }),
+        cache: 'no-store'
     })
 
     const url = new URL(process.env.NEXTAUTH_URL)

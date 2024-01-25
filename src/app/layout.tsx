@@ -6,7 +6,7 @@ import '@mantine/notifications/styles.css';
 import '@mantine/dates/styles.css'
 
 import {ColorSchemeScript} from '@mantine/core';
-import {PropsWithChildren} from "react";
+import {PropsWithChildren, Suspense} from "react";
 import {Providers} from "@/app/providers";
 import {NotifyAnywhereLayout} from "@/layouts";
 
@@ -25,9 +25,11 @@ export default async function RootLayout({children}: PropsWithChildren) {
             </head>
             <body>
             <Providers>
-                <NotifyAnywhereLayout>
-                    {children}
-                </NotifyAnywhereLayout>
+                <Suspense fallback={'Загрузка...'}>
+                    <NotifyAnywhereLayout>
+                        {children}
+                    </NotifyAnywhereLayout>
+                </Suspense>
             </Providers>
             </body>
             </html>

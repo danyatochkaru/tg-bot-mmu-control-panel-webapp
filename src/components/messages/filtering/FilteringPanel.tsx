@@ -1,11 +1,12 @@
 "use client"
 
-import {ActionIcon, Chip, Flex, MultiSelect, Stack} from "@mantine/core";
+import {ActionIcon, Chip, ComboboxItem, ComboboxParsedItemGroup, Flex, MultiSelect, Stack} from "@mantine/core";
 import {useFiltersStore} from "@/store/filters";
 import {useParamsStore} from "@/store/params";
 import {useGroupsStore} from "@/store/groups";
 import {useEffect} from "react";
 import {IconX} from "@tabler/icons-react";
+import {SPECIALITY_NAMES_BY_CODE, SpecialityCodes} from "@/constants/speciality-names";
 
 export function FilteringPanel() {
     const filtersStore = useFiltersStore()
@@ -34,7 +35,22 @@ export function FilteringPanel() {
             <MultiSelect
                     placeholder={'Начните вводить направление'}
                     searchable
-                    data={paramsStore.speciality}
+                    data={paramsStore.speciality.reduce((state: ComboboxParsedItemGroup[], item) => {
+                        const groupName = SPECIALITY_NAMES_BY_CODE[item.split(" ")[0].split('.')[1] as SpecialityCodes]
+                                || SPECIALITY_NAMES_BY_CODE['06']
+
+                        if (!state.some(i => i.group == groupName)) {
+                            state.push({group: groupName, items: []})
+                        }
+
+                        state.forEach(i => {
+                            if (i.group == groupName) {
+                                i.items.push(item as unknown as ComboboxItem)
+                            }
+                        })
+
+                        return state
+                    }, [])}
                     value={filtersStore.speciality}
                     onChange={filtersStore.setSpeciality}
                     clearable

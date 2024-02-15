@@ -56,7 +56,7 @@ export function MessagesListItem({message, recipients, sender, createdAt}: Props
                             </SimpleGrid>
                         </ScrollArea.Autosize>
                     })}>
-                Список гурпп
+                Список групп
             </Button>
             <Group>
                 <ProfileName id={sender.id} email={sender.email}

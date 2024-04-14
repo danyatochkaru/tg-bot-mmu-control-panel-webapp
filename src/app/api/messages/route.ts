@@ -9,6 +9,7 @@ import MailingWhereInput = Prisma.MailingWhereInput;
 const newMessageSchema = z.object({
     message: z.string(),
     recipients: z.number().array().nonempty(),
+    doLinkPreview: z.boolean().optional()
 })
 
 export async function GET(req: Request) {
@@ -97,7 +98,7 @@ export async function POST(req: Request) {
 
         const body = await req.json()
 
-        const {message, recipients} = newMessageSchema.parse(body)
+        const {message, recipients, doLinkPreview} = newMessageSchema.parse(body)
 
         const initiator = await db.profile.findFirstOrThrow({where: {email: session.data.user!.email as string}})
 
@@ -106,6 +107,7 @@ export async function POST(req: Request) {
             body: JSON.stringify({
                 groups: recipients,
                 text: message,
+                doLinkPreview,
             }),
             headers: {
                 'Content-Type': 'application/json',

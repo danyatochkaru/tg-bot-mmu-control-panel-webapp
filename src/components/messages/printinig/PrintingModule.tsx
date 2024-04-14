@@ -1,6 +1,6 @@
 "use client"
 
-import {AppShell, Button, Container, Flex, Progress, Stack, Text} from "@mantine/core";
+import {AppShell, Button, Container, Flex, Progress, Stack, Switch, Text} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {RichTextEditor} from "@mantine/tiptap";
 import {useEditor} from "@tiptap/react";
@@ -19,6 +19,7 @@ import {CharacterCount} from "@tiptap/extension-character-count";
 
 type FormValues = {
     message: string
+    doLinkPreview: boolean
 }
 
 const characterLimit = 4000;
@@ -30,6 +31,7 @@ export function PrintingModule() {
     const form = useForm<FormValues>({
         initialValues: {
             message: '',
+            doLinkPreview: false
         }
     })
     const editor = useEditor({
@@ -135,6 +137,11 @@ export function PrintingModule() {
                 >
                     {editor?.storage.characterCount.characters()}/{characterLimit}
                 </Text>
+            </Flex>
+            <Flex>
+                <Switch checked={form.values.doLinkPreview}
+                        onChange={(event) => form.setFieldValue('doLinkPreview', event.currentTarget.checked)}
+                        label={'Предпросмотр ссылок'}/>
             </Flex>
             {data
                     ? <Stack my={'md'}>

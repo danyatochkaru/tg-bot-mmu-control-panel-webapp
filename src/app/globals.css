@@ -1,6 +1,5 @@
 body {
-    min-width: 320px;
-
+    min-width: 350px;
 
     &, html {
         scrollbar-gutter: stable;
@@ -9,4 +8,5 @@ body {
 
 div.message p {
     margin: 0;
+    word-break: break-word;
 }

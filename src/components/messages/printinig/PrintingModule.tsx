@@ -1,6 +1,6 @@
 "use client"
 
-import {AppShell, Button, Container, Flex, Progress, Stack, Switch, Text} from "@mantine/core";
+import {ActionIcon, AppShell, Button, Container, Flex, Popover, Progress, Stack, Switch, Text} from "@mantine/core";
 import {useForm} from "@mantine/form";
 import {RichTextEditor} from "@mantine/tiptap";
 import {useEditor} from "@tiptap/react";
@@ -8,7 +8,7 @@ import {StarterKit} from "@tiptap/starter-kit";
 import {Link} from "@tiptap/extension-link";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import {Underline} from "@tiptap/extension-underline";
-import {useToggle} from "@mantine/hooks";
+import {useDisclosure, useToggle} from "@mantine/hooks";
 import {useRouter} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
 import {useFiltersStore} from "@/store/filters";
@@ -16,6 +16,7 @@ import {NodeHtmlMarkdown} from "node-html-markdown";
 import useSWR from "swr";
 import endingByNum from "@/utils/endingByNum";
 import {CharacterCount} from "@tiptap/extension-character-count";
+import {IconInfoSquare} from "@tabler/icons-react";
 
 type FormValues = {
     message: string
@@ -27,6 +28,7 @@ const characterLimit = 4000;
 export function PrintingModule() {
     const [loading, toggleLoading] = useToggle()
     const router = useRouter()
+    const [openedPopover, {close: closePopover, open: openPopover}] = useDisclosure(false);
     const selectedGroups = useFiltersStore(state => state.selectedGroups)
     const form = useForm<FormValues>({
         initialValues: {
@@ -129,7 +131,22 @@ export function PrintingModule() {
 
                 <RichTextEditor.Content/>
             </RichTextEditor>
-            <Flex justify={'flex-end'}>
+            <Flex justify={'space-between'} my={2}>
+                <Popover position="top-start"
+                         offset={4}
+                         opened={openedPopover}
+                >
+                    <Popover.Dropdown style={{pointerEvents: 'none'}} bg={'dark'} c={'white'} p={'xs'}>
+                        <Text size="sm">Shift + Enter - перенос на новую строку</Text>
+                        <Text size="sm">Enter - новый абзац</Text>
+                    </Popover.Dropdown>
+                    <Popover.Target>
+                        <ActionIcon onMouseEnter={openPopover} onMouseLeave={closePopover} variant={'subtle'}
+                                    size={'sm'} color={'gray'}>
+                            <IconInfoSquare size={'1em'} stroke={1}/>
+                        </ActionIcon>
+                    </Popover.Target>
+                </Popover>
                 <Text size={'sm'}
                       c={editor?.storage.characterCount.characters() > (characterLimit - characterLimit * 0.05)
                               ? editor?.storage.characterCount.characters() === characterLimit ? 'red' : 'red.4'
@@ -138,7 +155,7 @@ export function PrintingModule() {
                     {editor?.storage.characterCount.characters()}/{characterLimit}
                 </Text>
             </Flex>
-            <Flex>
+            <Flex my={'md'}>
                 <Switch checked={form.values.doLinkPreview}
                         onChange={(event) => form.setFieldValue('doLinkPreview', event.currentTarget.checked)}
                         label={'Предпросмотр ссылок'}/>

@@ -15,9 +15,9 @@ import Markdown from "react-markdown";
 import {modals} from "@mantine/modals";
 import {ProfileName} from "@/components/ProfileName";
 import {formatRelative} from "date-fns";
-import ruLocale from "date-fns/locale/ru";
 import {useSession} from "next-auth/react";
 import remarkGfm from "remark-gfm";
+import {ru as ruLocale} from "date-fns/locale/ru";
 
 type Props = {
     message: string,

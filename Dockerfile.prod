@@ -8,6 +8,7 @@ RUN yarn install --immutable
 
 FROM node:lts-alpine as builder
 WORKDIR /app
+RUN corepack enable
 COPY . .
 COPY --from=dependencies /app/node_modules ./node_modules
 RUN yarn set version berry

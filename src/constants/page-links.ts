@@ -10,4 +10,5 @@ export const PAGE_LINKS = {
     PROFILE_LIST: '/profile/list',
     NEW_PROFILE: '/profile/new',
     PROFILE_SETTINGS: '/profile/settings',
+    STATS: '/stats',
 }

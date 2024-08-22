@@ -1,4 +1,4 @@
-import {Button, ButtonProps, Container, SimpleGrid} from "@mantine/core";
+import {Button, ButtonProps, Container, Group, SimpleGrid} from "@mantine/core";
 import Link from "next/link";
 import {IconList, IconPlus, IconSettings} from "@tabler/icons-react";
 import {PAGE_LINKS} from "@/constants/page-links";
@@ -67,17 +67,22 @@ export default async function Home() {
 
     const buttonsToRender = buttons.filter(b => !b.onlyAdmin || session.user.role === 'ADMIN')
 
-    return <Container p={'md'}>
-        <SimpleGrid cols={{
-            base: 1,
-            xs: calcColumCount(buttonsToRender.length, 2),
-            md: calcColumCount(buttonsToRender.length),
-        }}
-                    mb={'lg'}>
-            {buttonsToRender.map((b) => (
-                    <Button key={b.value} {...b.props}>{b.value}</Button>
-            ))}
-        </SimpleGrid>
-        <MessagesListModule/>
-    </Container>
+    return <>
+        <Container p={'md'}>
+            <SimpleGrid cols={{
+                base: 1,
+                xs: calcColumCount(buttonsToRender.length, 2),
+                md: calcColumCount(buttonsToRender.length),
+            }}
+                        mb={'lg'}>
+                {buttonsToRender.map((b) => (
+                        <Button key={b.value} {...b.props}>{b.value}</Button>
+                ))}
+            </SimpleGrid>
+            <MessagesListModule/>
+            <Group py={'md'}>
+                <Button component={Link} href={PAGE_LINKS.STATS} variant="transparent" size={'xs'} color={'dark'}>Статистика бота (β)</Button>
+            </Group>
+        </Container>
+    </>
 }

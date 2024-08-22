@@ -84,6 +84,11 @@ export async function POST(req: Request) {
             const message = e.errors.map(e => e.message).join(', ')
             return NextResponse.json({message}, {status: 400})
         }
+
+        if (e instanceof Error) {
+            console.error(e)
+        }
+
         return NextResponse.json({message: 'Что-то пошло не так', errors: (e as ZodError)?.errors}, {status: 500})
     }
 }
@@ -113,7 +118,7 @@ export async function PATCH(req: Request) {
                 password: hashedPassword
             }
         })
-        
+
         await db.recovery.delete({where: {id: existingRecovery.id}})
         return NextResponse.json({message: 'Пароль успешно изменен'}, {status: 200})
     } catch (e) {

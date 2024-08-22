@@ -1,10 +1,6 @@
 import {Recovery} from "@prisma/client";
-import {Html} from "@react-email/html";
-import {Container} from "@react-email/container";
-import {Text} from "@react-email/text";
-import {Link} from "@react-email/link";
 import {PAGE_LINKS} from "@/constants/page-links";
-import {Section} from "@react-email/section";
+import {Container, Html, Link, Section, Text} from "@react-email/components";
 
 export default function EmailRecovery(token: Recovery['token']) {
     return (

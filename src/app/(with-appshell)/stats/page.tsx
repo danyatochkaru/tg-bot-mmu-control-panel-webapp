@@ -49,7 +49,7 @@ export default async function StatsPage(props: any) {
     } = await fetch(`${process.env.BOT_API_HOST}/info/users/count?date=${format(new Date().toUTCString(), 'yyyy-MM-dd')}&days=${days}`)
             .then(i => i.json())
 
-    stats.data.details.toSorted((a,b) =>
+    /*stats.data.details.toSorted((a,b) =>
         new Date(a.date).getTime() - new Date(b.date).getTime()).forEach(a =>
             console.log({
                 date: a.date,
@@ -63,7 +63,7 @@ export default async function StatsPage(props: any) {
         count: stats.data.details.find(j =>
                 format(j.date, 'yyyy-MM-dd') === format(d, 'yyyy-MM-dd')
         )?.groups.reduce((acc, cur) => acc + cur.count, 0) || 0
-    })))
+    })))*/
 
     return <Container p={'md'}>
         <Stack gap={'lg'}>

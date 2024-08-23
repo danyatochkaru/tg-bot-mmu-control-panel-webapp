@@ -4,7 +4,7 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
-import {addDays, format, startOfDay} from "date-fns";
+import {addDays, endOfDay, format} from "date-fns";
 
 type UsersCountResponse = {
     total_count: number;
@@ -39,24 +39,31 @@ export default async function StatsPage(props: any) {
 
     const days = (+props.searchParams.days > 30 ? 30 : +props.searchParams.days) || 7
 
-    const dates = Array.from({length: days}, (_, index) => startOfDay(addDays(new Date(), -index))).reverse()
+    const dates = Array.from({length: days}, (_, index) => endOfDay(addDays(new Date(), -index))).reverse()
 
     const total: {
         data: UsersCountResponse
     } = await fetch(`${process.env.BOT_API_HOST}/info/users/count`).then(i => i.json())
     const stats: {
         data: UsersCountResponse
-    } = await fetch(`${process.env.BOT_API_HOST}/info/users/count?date=${format(new Date(), 'yyyy-MM-dd')}&days=${days}`)
+    } = await fetch(`${process.env.BOT_API_HOST}/info/users/count?date=${format(new Date().toUTCString(), 'yyyy-MM-dd')}&days=${days}`)
             .then(i => i.json())
 
-    // stats.data.details.toSorted((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime()).forEach(a => console.log(a.date, a.groups.reduce((acc, group) => acc + group.count, 0)))
+    stats.data.details.toSorted((a,b) =>
+        new Date(a.date).getTime() - new Date(b.date).getTime()).forEach(a =>
+            console.log({
+                date: a.date,
+                count: a.groups.reduce((acc, group) => acc + group.count, 0)
+            })
+        )
 
-    /*console.log(dates.map(d => ({
+
+    console.log(dates.map(d => ({
         date: format(d, 'yyyy-MM-dd'),
-        'Новых пользователей за день': stats.data.details.find(j =>
+        count: stats.data.details.find(j =>
                 format(j.date, 'yyyy-MM-dd') === format(d, 'yyyy-MM-dd')
         )?.groups.reduce((acc, cur) => acc + cur.count, 0) || 0
-    })))*/
+    })))
 
     return <Container p={'md'}>
         <Stack gap={'lg'}>

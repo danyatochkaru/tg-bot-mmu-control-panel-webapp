@@ -14,6 +14,15 @@ export function ScaleControls({currentValue}: Props) {
     const router = useRouter()
 
     const [scale, setScale] = useState<string>(currentValue)
+    const [variants, setVariants] = useState([
+        {
+            label: 'Неделю',
+            value: '7'
+        }, {
+            label: 'Месяц',
+            value: '30'
+        }
+    ])
 
     useEffect(() => {
         if (scale !== currentValue) {
@@ -23,11 +32,21 @@ export function ScaleControls({currentValue}: Props) {
         }
     }, [scale, currentValue]);
 
+    useEffect(() => {
+        if (!variants.some(v => String(v.value) == scale)) {
+            setVariants(vs => [...vs, {
+                label: `${scale} дн.`,
+                value: scale
+            }])
+        }
+    }, []);
+
 
     return <ChipGroup defaultValue={scale} onChange={v => setScale(v as string)}>
         <Group justify="left" gap={'xs'}>
-            <Chip size={'xs'} value="7">Неделю</Chip>
-            <Chip size={'xs'} value="30">Месяц</Chip>
+            {variants.map(v => (
+                    <Chip key={v.value} size={'xs'} value={v.value}>{v.label}</Chip>
+            ))}
         </Group>
     </ChipGroup>
 }

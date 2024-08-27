@@ -1,5 +1,5 @@
 import {Badge, Container, Group, NumberFormatter, Paper, Stack, Text} from "@mantine/core";
-import {AreaChart} from "@mantine/charts";
+import {AreaChart, PieChart} from "@mantine/charts";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
@@ -34,8 +34,8 @@ function getFormattedPhrase(days: number) {
 }
 
 const SOURCE_TRANSLATE: Record<string, string> = {
-    'directly': 'С помощью команды /start',
-    'group_link': 'Через пригласительную ссылку'
+    'directly': 'Через /start',
+    'group_link': 'Через ссылку'
 }
 
 function calcAvgValue(nums: number[]) {
@@ -51,7 +51,7 @@ export default async function StatsPage(props: {
         return redirect(PAGE_LINKS.LOGIN)
     }
 
-    const sources: {source: string, count: number}[] = await fetch(`${process.env.BOT_API_HOST}/info/users/source`, {
+    const sources: { source: string, count: number }[] = await fetch(`${process.env.BOT_API_HOST}/info/users/source`, {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${process.env.BOT_AUTH_TOKEN}`,
@@ -132,7 +132,7 @@ export default async function StatsPage(props: {
                     <Group gap={'xs'} align={'center'}>
                         <Text>
                             <NumberFormatter value={stats.data.total_count} thousandSeparator=" " decimalScale={2}
-                                             decimalSeparator="."/> новых {endingByNum(stats.data.total_count, ['пользователь', "пользователя", "пользователей"])} за
+                                             decimalSeparator="."/> {endingByNum(stats.data.total_count, ['новый пользователь', "новых пользователя", "новых пользователей"])} за
                         </Text>
                         <ScaleControls currentValue={props.searchParams.days}/>
                     </Group>
@@ -170,6 +170,22 @@ export default async function StatsPage(props: {
                     </Group>
                 </Stack>
             </Paper>
+            <Stack gap={'lg'}>
+                <Text>Источники регистрации:</Text>
+                <PieChart size={240}
+                          withLabelsLine
+                          labelsPosition="inside"
+                          labelsType="percent"
+                          withLabels
+                          withTooltip
+                          data={sources.toSorted((a, b) => b.count - a.count).map((s, index) => ({
+                              key: s.source,
+                              name:  SOURCE_TRANSLATE[s.source] || s.source,
+                              value: +s.count,
+                              color: ['brand', 'teal'][index]
+                          }))}
+                />
+            </Stack>
         </Stack>
     </Container>
 }

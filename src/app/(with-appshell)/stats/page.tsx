@@ -4,7 +4,7 @@ import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
-import {addDays, endOfDay, format} from "date-fns";
+import {addDays, format, startOfDay} from "date-fns";
 
 type UsersCountResponse = {
     total_count: number;
@@ -39,14 +39,27 @@ export default async function StatsPage(props: any) {
 
     const days = (+props.searchParams.days > 30 ? 30 : +props.searchParams.days) || 7
 
-    const dates = Array.from({length: days}, (_, index) => endOfDay(addDays(new Date(), -index))).reverse()
+    const dates = Array
+            .from({length: days}, (_, index) => startOfDay(addDays(new Date(), -index * (!!JSON.parse(props.searchParams.next || 0) ? -1 : 1))))
+            .toSorted((a, b) => a.getTime() - b.getTime())
 
     const total: {
         data: UsersCountResponse
     } = await fetch(`${process.env.BOT_API_HOST}/info/users/count`).then(i => i.json())
+
+    const statsSearchParams = new URLSearchParams()
+
+    statsSearchParams.set('date', new Date().toISOString())
+    statsSearchParams.set('days', String(days))
+
+    if (!!JSON.parse(props.searchParams.next || 0)) {
+        statsSearchParams.set('dir', 'next')
+    }
+
     const stats: {
+        payload: any,
         data: UsersCountResponse
-    } = await fetch(`${process.env.BOT_API_HOST}/info/users/count?date=${format(new Date().toUTCString(), 'yyyy-MM-dd')}&days=${days}`)
+    } = await fetch(`${process.env.BOT_API_HOST}/info/users/count?${statsSearchParams.toString()}`)
             .then(i => i.json())
 
     /*stats.data.details.toSorted((a,b) =>
@@ -59,7 +72,7 @@ export default async function StatsPage(props: any) {
 
 
     console.log(dates.map(d => ({
-        date: format(d, 'yyyy-MM-dd'),
+        date: d.toISOString(),
         count: stats.data.details.find(j =>
                 format(j.date, 'yyyy-MM-dd') === format(d, 'yyyy-MM-dd')
         )?.groups.reduce((acc, cur) => acc + cur.count, 0) || 0
@@ -81,7 +94,7 @@ export default async function StatsPage(props: any) {
                         h={300}
                         data={
                             dates.map(d => ({
-                                date: format(d, 'yyyy-MM-dd'),
+                                date: format(d, 'dd.MM.yyyy'),
                                 'Новых пользователей за день': stats.data.details.find(j =>
                                         format(j.date, 'yyyy-MM-dd') === format(d, 'yyyy-MM-dd')
                                 )?.groups.reduce((acc, cur) => acc + cur.count, 0) || 0

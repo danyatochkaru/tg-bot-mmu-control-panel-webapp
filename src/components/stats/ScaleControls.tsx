@@ -13,7 +13,7 @@ export function ScaleControls({currentValue}: Props) {
     const sp = useSearchParams()
     const router = useRouter()
 
-    const [scale, setScale] = useState<string>(currentValue)
+    const [scale, setScale] = useState<string>(currentValue || "7")
     const [variants, setVariants] = useState([
         {
             label: 'Неделю',

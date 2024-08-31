@@ -1,10 +1,13 @@
-import {Container, Text} from "@mantine/core";
+import {Container, Loader, Stack, Text} from "@mantine/core";
 import {FormLayout} from "@/layouts/FormLayout";
 
 export default function LoadingEditProfile() {
     return <Container p={'md'}>
         <FormLayout>
-            <Text>Загрузка...</Text>
+            <Stack gap={'xs'} align={'center'}>
+                <Loader/>
+                <Text>Загрузка...</Text>
+            </Stack>
         </FormLayout>
     </Container>
 }

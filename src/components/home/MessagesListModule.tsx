@@ -1,6 +1,6 @@
 "use client"
 
-import {ActionIcon, Group, Pagination, SegmentedControl, Stack, Text} from "@mantine/core";
+import {ActionIcon, Group, Loader, Pagination, SegmentedControl, Stack, Text} from "@mantine/core";
 import {useEffect} from "react";
 import useSWR from "swr";
 import {Mailing, Profile} from "@prisma/client";
@@ -69,7 +69,10 @@ export function MessagesListModule() {
                 </Group>
             </Group>
             {isLoading
-                    ? <Text>Загрузка...</Text>
+                    ? <Stack gap={'xs'} align={'center'}>
+                        <Loader/>
+                        <Text>Загрузка...</Text>
+                    </Stack>
                     : data?.messages?.length
                             ? data?.messages?.map((i) => (
                                     <MessagesListItem key={i.id}

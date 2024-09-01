@@ -5,6 +5,8 @@ import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
 
+export const revalidate = 90
+
 export default async function StatsLayout(props: {
     children: React.ReactNode,
     newuserschart: React.ReactNode,

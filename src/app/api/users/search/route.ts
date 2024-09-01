@@ -1,11 +1,8 @@
 import {NextResponse} from "next/server";
-import * as z from "zod";
 import checkSession from "@/utils/checkSession";
 import db from "@/lib/db";
 
-const searchUserSchema = z.object({
-    email: z.string().email().optional(),
-})
+export const dynamic = "force-dynamic"
 
 export async function GET(req: Request) {
     try {

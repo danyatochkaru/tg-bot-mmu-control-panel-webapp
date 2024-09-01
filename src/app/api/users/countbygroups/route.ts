@@ -1,6 +1,8 @@
 import {NextResponse} from "next/server";
 import checkSession from "@/utils/checkSession";
 
+export const dynamic = "force-dynamic"
+
 export async function GET(req: Request) {
     try {
         const session = await checkSession()

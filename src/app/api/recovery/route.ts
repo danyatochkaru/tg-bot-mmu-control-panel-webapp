@@ -66,7 +66,7 @@ export async function POST(req: Request) {
         await sendEmail({
             to: email,
             subject: 'Восстановление пароля в системе отправки рассылки бота ММУ',
-            html: render(EmailRecovery(token))
+            html: await render(EmailRecovery(token))
         })
 
         const now = new Date()

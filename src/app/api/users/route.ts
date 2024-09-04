@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         await sendEmail({
             to: email,
             subject: 'Вас пригласили в систему отправки рассылки бота ММУ',
-            html: render(EmailInvite(token))
+            html: await render(EmailInvite(token))
         })
 
         const now = new Date()

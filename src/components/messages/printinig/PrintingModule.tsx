@@ -1,54 +1,29 @@
 "use client"
 
-import {ActionIcon, AppShell, Button, Container, Flex, Popover, Progress, Stack, Switch, Text} from "@mantine/core";
+import {AppShell, Button, Container, Flex, Progress, Stack, Switch, Text} from "@mantine/core";
 import {useForm} from "@mantine/form";
-import {RichTextEditor} from "@mantine/tiptap";
-import {useEditor} from "@tiptap/react";
-import {StarterKit} from "@tiptap/starter-kit";
-import {Link} from "@tiptap/extension-link";
-import {Placeholder} from "@tiptap/extension-placeholder";
-import {Underline} from "@tiptap/extension-underline";
-import {useDisclosure, useToggle} from "@mantine/hooks";
+import {useToggle} from "@mantine/hooks";
 import {useRouter} from "next/navigation";
-import {PAGE_LINKS} from "@/constants/page-links";
 import {useFiltersStore} from "@/store/filters";
-import {NodeHtmlMarkdown} from "node-html-markdown";
 import useSWR from "swr";
 import endingByNum from "@/utils/endingByNum";
-import {CharacterCount} from "@tiptap/extension-character-count";
-import {IconInfoSquare} from "@tabler/icons-react";
+import RichMessageEditor from "@/components/RichMessageEditor";
+import {PAGE_LINKS} from "@/constants/page-links";
 
 type FormValues = {
     message: string
     doLinkPreview: boolean
 }
 
-const characterLimit = 4000;
-
 export function PrintingModule() {
     const [loading, toggleLoading] = useToggle()
     const router = useRouter()
-    const [openedPopover, {close: closePopover, open: openPopover}] = useDisclosure(false);
     const selectedGroups = useFiltersStore(state => state.selectedGroups)
     const form = useForm<FormValues>({
         initialValues: {
             message: '',
             doLinkPreview: false
         }
-    })
-    const editor = useEditor({
-        content: form.values['message'],
-        extensions: [
-            StarterKit,
-            Link.configure({openOnClick: false}),
-            Underline,
-            Placeholder.configure({placeholder: 'Введите сообщение'}),
-            CharacterCount.configure({
-                limit: characterLimit,
-                mode: 'textSize',
-            })
-        ],
-        onUpdate: ({editor}) => form.setFieldValue('message', NodeHtmlMarkdown.translate(editor.getHTML()))
     })
 
     const handleSubmit = (values: FormValues) => {
@@ -99,62 +74,7 @@ export function PrintingModule() {
 
     return <>
         <Container p={'md'}>
-            <RichTextEditor editor={editor} labels={{
-                linkEditorSave: 'Вставить',
-                linkEditorExternalLink: 'Открывать в новой вкладке',
-                linkEditorInternalLink: 'Открывать в той же вкладке',
-                linkEditorInputPlaceholder: 'Вставьте ссылку',
-                linkControlLabel: 'Ссылка',
-                unlinkControlLabel: 'Удалить ссылку',
-                boldControlLabel: 'Жирный',
-                italicControlLabel: 'Наклонный',
-                underlineControlLabel: 'Подчёркнутый',
-                strikeControlLabel: 'Зачёркнутый',
-                clearFormattingControlLabel: 'Очистить стиль',
-                codeControlLabel: 'Код (однострочный)'
-            }}>
-                <RichTextEditor.Toolbar>
-                    <RichTextEditor.ControlsGroup>
-                        <RichTextEditor.Bold/>
-                        <RichTextEditor.Italic/>
-                        <RichTextEditor.Underline/>
-                        <RichTextEditor.Strikethrough/>
-                        <RichTextEditor.ClearFormatting/>
-                        <RichTextEditor.Code/>
-                    </RichTextEditor.ControlsGroup>
-
-                    <RichTextEditor.ControlsGroup>
-                        <RichTextEditor.Link/>
-                        <RichTextEditor.Unlink/>
-                    </RichTextEditor.ControlsGroup>
-                </RichTextEditor.Toolbar>
-
-                <RichTextEditor.Content/>
-            </RichTextEditor>
-            <Flex justify={'space-between'} my={2}>
-                <Popover position="top-start"
-                         offset={4}
-                         opened={openedPopover}
-                >
-                    <Popover.Dropdown style={{pointerEvents: 'none'}} bg={'dark'} c={'white'} p={'xs'}>
-                        <Text size="sm">Shift + Enter - перенос на новую строку</Text>
-                        <Text size="sm">Enter - новый абзац</Text>
-                    </Popover.Dropdown>
-                    <Popover.Target>
-                        <ActionIcon onMouseEnter={openPopover} onMouseLeave={closePopover} variant={'subtle'}
-                                    size={'sm'} color={'gray'}>
-                            <IconInfoSquare size={'1em'} stroke={1}/>
-                        </ActionIcon>
-                    </Popover.Target>
-                </Popover>
-                <Text size={'sm'}
-                      c={editor?.storage.characterCount.characters() > (characterLimit - characterLimit * 0.05)
-                              ? editor?.storage.characterCount.characters() === characterLimit ? 'red' : 'red.4'
-                              : 'gray.5'}
-                >
-                    {editor?.storage.characterCount.characters()}/{characterLimit}
-                </Text>
-            </Flex>
+            <RichMessageEditor form={form} contentProperty={'message'}/>
             <Flex my={'md'}>
                 <Switch checked={form.values.doLinkPreview}
                         onChange={(event) => form.setFieldValue('doLinkPreview', event.currentTarget.checked)}

@@ -10,6 +10,7 @@ import {useSearchParams} from "next/navigation";
 import {IconFilter, IconFilterFilled} from "@tabler/icons-react";
 import {useFilteringQueryString} from "@/components/home/useFilteringQueryString";
 import {MessagesListItem} from "@/components/home/MessagesListItem";
+import Title from "@/components/Title";
 
 export function MessagesListModule() {
     const sp = useSearchParams()
@@ -41,10 +42,7 @@ export function MessagesListModule() {
         <FilteringDrawer/>
         <Stack gap={'lg'}>
             <Group justify={'space-between'}>
-                <Group align={'baseline'} gap={'xs'}>
-                    <Text fw={700} size={'lg'}>История рассылок</Text>
-                    {data?.count && <Text size={'sm'}>всего: {data.count}</Text>}
-                </Group>
+                <Title title={'История рассылок'} subtitle={data?.count ? `всего: ${data.count}` : undefined}/>
                 <Group>
                     <SegmentedControl
                             size={'sm'}

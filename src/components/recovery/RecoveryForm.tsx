@@ -44,6 +44,7 @@ export function RecoveryForm() {
                     autoComplete={'email'}
                     label={'Почта'}
                     type={'email'}
+                    required
                     placeholder={'Введите почту'}
             />
         </Stack>

@@ -99,6 +99,8 @@ export default async function NewUsersChartPage(props: Props) {
                                         size={'xs'}
                                         variant={'subtle'}
                                         disabled={i.disabled}
+                                        replace
+                                        prefetch={false}
                                 >{i.label}</Button>
                         ))}
                     </ButtonGroup>

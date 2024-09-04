@@ -15,6 +15,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             leftSection: <IconPlus size={'1rem'}/>,
             component: Link,
             href: PAGE_LINKS.NEW_MESSAGE,
+            prefetch: false,
         },
         value: 'Новая рассылка',
         onlyAdmin: false,
@@ -26,6 +27,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             component: Link,
             href: PAGE_LINKS.PROFILE,
             variant: 'default',
+            prefetch: false,
         },
         value: 'Настройки профиля',
         onlyAdmin: false,
@@ -37,6 +39,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             component: Link,
             href: PAGE_LINKS.NEW_PROFILE,
             variant: 'default',
+            prefetch: false,
         },
         value: 'Новый профиль',
         onlyAdmin: true,
@@ -48,6 +51,7 @@ const buttons: { props: ButtonProps & Record<string, any>, value: string, onlyAd
             component: Link,
             href: PAGE_LINKS.PROFILE_LIST,
             variant: 'default',
+            prefetch: false,
         },
         value: 'Список всех профилей',
         onlyAdmin: true,
@@ -80,8 +84,22 @@ export default async function Home() {
                 ))}
             </SimpleGrid>
             <MessagesListModule/>
-            <Group py={'md'}>
-                <Button component={Link} href={PAGE_LINKS.STATS} variant="transparent" size={'xs'} color={'dark'}>Статистика бота (β)</Button>
+            <Group py={'md'} gap={'xs'}>
+                {[
+                    {label: "Статистика бота (β)", href: PAGE_LINKS.STATS},
+                    {label: "Настройки бота (β)", href: PAGE_LINKS.BOT, onlyAdmin: true},
+                ].filter(i => !i.onlyAdmin || session.user.role === 'ADMIN')
+                        .map(i => (
+                                <Button key={i.label}
+                                        href={i.href}
+                                        component={Link}
+                                        variant="transparent"
+                                        size={'xs'}
+                                        color={'dark'}
+                                        prefetch={false}
+                                        px={0}
+                                >{i.label}</Button>
+                        ))}
             </Group>
         </Container>
     </>

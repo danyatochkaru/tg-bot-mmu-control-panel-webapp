@@ -11,4 +11,5 @@ export const PAGE_LINKS = {
     NEW_PROFILE: '/profile/new',
     PROFILE_SETTINGS: '/profile/settings',
     STATS: '/stats',
+    BOT: '/bot',
 }

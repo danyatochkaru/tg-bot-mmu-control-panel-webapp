@@ -1,9 +1,10 @@
 import React from "react";
-import {Container, Group, Stack, Text} from "@mantine/core";
+import {Container, Group, Stack} from "@mantine/core";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
+import Title from "@/components/Title";
 
 export const revalidate = 90
 
@@ -23,7 +24,7 @@ export default async function StatsLayout(props: {
         <Stack gap={'lg'}>
             <Group justify={'space-between'}>
                 <Group align={'baseline'} gap={'xs'}>
-                    <Text fw={700} size={'lg'}>Статистика бота</Text>
+                    <Title title={'Статистика бота'}/>
                 </Group>
             </Group>
             {props.totalinfo}

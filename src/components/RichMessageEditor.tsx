@@ -46,7 +46,8 @@ export default function RichMessageEditor<
         ],
         onUpdate: ({editor}) => form.setFieldValue(
                 contentProperty,
-                NodeHtmlMarkdown.translate(editor.getHTML() as string),
+                //@ts-ignore
+                NodeHtmlMarkdown.translate(editor.getHTML()),
         )
     })
 

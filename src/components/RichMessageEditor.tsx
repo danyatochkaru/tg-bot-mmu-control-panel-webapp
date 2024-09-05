@@ -12,12 +12,15 @@ import {UseFormReturnType} from "@mantine/form";
 import {ActionIcon, Flex, Popover, Stack, Text} from "@mantine/core";
 import {IconInfoSquare} from "@tabler/icons-react";
 import {useDisclosure} from "@mantine/hooks";
+import {useEffect} from "react";
 
 type Props<R = any> = {
     form: UseFormReturnType<R>,
     contentProperty: string,
     characterLimit?: number,
     placeholder?: string,
+    disable?: boolean,
+    format?: 'html' | 'md'
 }
 
 export default function RichMessageEditor<
@@ -27,7 +30,9 @@ export default function RichMessageEditor<
       contentProperty,
       form,
       characterLimit = 4000,
-      placeholder = "Введите сообщение"
+      placeholder = "Введите сообщение",
+      disable = false,
+      format = 'md'
   }: Props<T>) {
     const [openedPopover, {close: closePopover, open: openPopover}] = useDisclosure(false);
 
@@ -47,9 +52,17 @@ export default function RichMessageEditor<
         onUpdate: ({editor}) => form.setFieldValue(
                 contentProperty,
                 //@ts-ignore
-                NodeHtmlMarkdown.translate(editor.getHTML()),
-        )
+                format === 'md' ? NodeHtmlMarkdown.translate(editor.getHTML()) : editor.getHTML(),
+        ),
     })
+
+    useEffect(() => {
+        editor?.setEditable(!disable)
+    }, [disable]);
+
+    useEffect(() => {
+        console.log(form.values[contentProperty])
+    }, [form.values[contentProperty]]);
 
     return <Stack gap={2}>
         <RichTextEditor

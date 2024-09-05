@@ -86,8 +86,8 @@ export default async function Home() {
             <MessagesListModule/>
             <Group py={'md'} gap={'xs'}>
                 {[
-                    {label: "Статистика бота (β)", href: PAGE_LINKS.STATS},
-                    {label: "Настройки бота (β)", href: PAGE_LINKS.BOT, onlyAdmin: true},
+                    {label: "Настройки бота", href: PAGE_LINKS.BOT, onlyAdmin: true},
+                    {label: "Статистика бота", href: PAGE_LINKS.STATS},
                 ].filter(i => !i.onlyAdmin || session.user.role === 'ADMIN')
                         .map(i => (
                                 <Button key={i.label}

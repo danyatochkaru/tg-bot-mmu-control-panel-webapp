@@ -1,4 +1,4 @@
-FROM node:lts-alpine as dependencies
+FROM node:lts-alpine AS dependencies
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN corepack enable
@@ -6,7 +6,7 @@ COPY package.json yarn.lock .yarnrc.yml ./
 RUN yarn set version berry
 RUN yarn install --immutable
 
-FROM node:lts-alpine as builder
+FROM node:lts-alpine AS builder
 WORKDIR /app
 RUN corepack enable
 COPY . .
@@ -16,7 +16,7 @@ RUN yarn dlx prisma migrate deploy
 RUN yarn dlx prisma generate
 RUN yarn build
 
-FROM node:lts-alpine as runner
+FROM node:lts-alpine AS runner
 WORKDIR /app
 RUN corepack enable
 ENV NODE_ENV production
@@ -30,7 +30,7 @@ COPY --from=builder /app/yarn.lock ./yarn.lock
 COPY --from=builder /app/.yarnrc.yml ./.yarnrc.yml
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/.env* ./.env
 COPY --from=builder /app/prisma ./prisma
 
 RUN yarn set version berry

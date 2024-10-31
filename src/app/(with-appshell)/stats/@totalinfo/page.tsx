@@ -1,4 +1,4 @@
-import {Badge, Group, NumberFormatter, Text} from "@mantine/core";
+import {Badge, Group, NumberFormatter, Stack, Text} from "@mantine/core";
 import {UsersCountResponse} from "@/types/stats";
 
 export default async function TotalInfoPage() {
@@ -11,15 +11,31 @@ export default async function TotalInfoPage() {
         }
     }).then(i => i.json())
 
-    return <Group gap={'xs'} align={'center'}>
-        <Text>Кол-во зарегистрированных пользователей:</Text>
-        <Badge size={'lg'} autoContrast color="brand">
-            <NumberFormatter
-                    value={total.data.total_count}
-                    thousandSeparator=" "
-                    decimalScale={2}
-                    decimalSeparator="."
-            />
-        </Badge>
-    </Group>
+    return <Stack gap={'xs'}>
+        <Group gap={'xs'} align={'center'}>
+            <Text>Кол-во зарегистрированных пользователей:</Text>
+            <Badge size={'lg'} autoContrast color="brand">
+                <NumberFormatter
+                        value={total.data.total_count}
+                        thousandSeparator=" "
+                        decimalScale={2}
+                        decimalSeparator="."
+                />
+            </Badge>
+        </Group>
+        {!!total.data.total_inactive &&
+                <Group gap={'xs'} align={'center'}>
+                    <Text title={"Кол-во пользователей, которые запретили отпраку сообщений от бота"}>Кол-во неактивных
+                        пользователей:</Text>
+                    <Badge size={'lg'} autoContrast color="brand">
+                        <NumberFormatter
+                                value={total.data.total_inactive}
+                                thousandSeparator=" "
+                                decimalScale={2}
+                                decimalSeparator="."
+                        />
+                    </Badge>
+                </Group>
+        }
+    </Stack>
 }

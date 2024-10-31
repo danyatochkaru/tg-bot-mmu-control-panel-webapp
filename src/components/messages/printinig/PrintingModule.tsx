@@ -66,6 +66,7 @@ export function PrintingModule() {
     )
     const {data: usersCount} = useSWR<{
         groups: Record<string, number>,
+        inactive: number,
         total: number
     }>(
             `/api/users/countbygroups?groups=${selectedGroups.join(',')}`,
@@ -96,7 +97,13 @@ export function PrintingModule() {
                                     />
                                 </Stack>}
                         <Text hidden={!usersCount}>
-                            {`Сообщение будет отправлено ${usersCount?.total} ${endingByNum(usersCount?.total ?? 0, ['человеку', 'людям', 'человек'])}`}
+                            {`Сообщение будет отправлено ${
+                                    usersCount
+                                            ? (usersCount.total - usersCount.inactive)
+                                            : 0} ${
+                                    endingByNum(usersCount
+                                            ? (usersCount.total - usersCount.inactive)
+                                            : 0, ['человеку', 'людям', 'человек'])}`}
                         </Text>
                         <Text size={'sm'} hidden={isLoading || data?.progress?.rejected! == 0}>
                             {`Не удалось отправить ${data?.progress?.rejected} ${endingByNum(data?.progress?.rejected!, ['человеку', 'людям', 'человек'])}`}

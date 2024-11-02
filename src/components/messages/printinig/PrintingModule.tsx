@@ -96,6 +96,9 @@ export function PrintingModule() {
                                             animated
                                     />
                                 </Stack>}
+                        <Text size={'sm'} hidden={isLoading || data?.progress?.rejected! == 0}>
+                            {`Не удалось отправить ${data?.progress?.rejected} ${endingByNum(data?.progress?.rejected!, ['человеку', 'людям', 'человек'])}`}
+                        </Text>
                         <Text hidden={!usersCount}>
                             {`Сообщение будет отправлено ${
                                     usersCount
@@ -104,9 +107,6 @@ export function PrintingModule() {
                                     endingByNum(usersCount
                                             ? (usersCount.total - usersCount.inactive)
                                             : 0, ['человеку', 'людям', 'человек'])}`}
-                        </Text>
-                        <Text size={'sm'} hidden={isLoading || data?.progress?.rejected! == 0}>
-                            {`Не удалось отправить ${data?.progress?.rejected} ${endingByNum(data?.progress?.rejected!, ['человеку', 'людям', 'человек'])}`}
                         </Text>
                     </Stack>
                     : <Text my={'md'}>Получение статуса...</Text>}

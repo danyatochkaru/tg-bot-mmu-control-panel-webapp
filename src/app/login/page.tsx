@@ -1,10 +1,13 @@
 import {Container} from "@mantine/core";
-import {CreatePasswordForm, LoginForm} from "@/components/login";
 import {FormLayout} from "@/layouts";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
 import {PAGE_LINKS} from "@/constants/page-links";
+import dynamic from "next/dynamic";
+
+const LoginForm = dynamic(() => import("@/components/login/LoginForm"))
+const CreatePasswordForm = dynamic(() => import("@/components/login/CreatePasswordForm"))
 
 async function fetchRequest(token: string) {
     const resRequest = await fetch(process.env.NEXTAUTH_URL + '/api/requests/check?token=' + token)

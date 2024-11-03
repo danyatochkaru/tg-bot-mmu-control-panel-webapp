@@ -14,7 +14,7 @@ type LoginData = {
     password: string
 }
 
-export function LoginForm() {
+export default function LoginForm() {
     const [globalError, setGlobalError] = useState<string | null>(null);
     const [loading, toggleLoading] = useToggle()
     const router = useRouter()

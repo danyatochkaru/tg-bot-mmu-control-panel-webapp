@@ -6,7 +6,7 @@ import {SearchSenderInput} from "@/components/home/SearchSenderInput";
 import {useSession} from "next-auth/react";
 import {DateFilteringInput} from "@/components/home/DateFilteringInput";
 
-export function FilteringDrawer() {
+export default function FilteringDrawer() {
     const sp = useSearchParams()
     const router = useRouter()
     const pathname = usePathname()

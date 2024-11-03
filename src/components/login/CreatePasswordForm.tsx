@@ -13,7 +13,7 @@ type CreatePasswordData = {
     confirmPassword: string
 }
 
-export function CreatePasswordForm() {
+export default function CreatePasswordForm() {
     const [globalError, setGlobalError] = useState<string | null>(null);
     const [loading, toggleLoading] = useToggle()
     const router = useRouter()

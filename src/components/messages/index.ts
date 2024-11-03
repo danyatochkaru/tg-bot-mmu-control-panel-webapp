@@ -1,2 +1,2 @@
 export {FilteringModule} from './filtering'
-export {PrintingModule} from './printinig'
+export {PrintingModule} from './printing'

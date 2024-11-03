@@ -10,7 +10,7 @@ import {PAGE_LINKS} from "@/constants/page-links";
 import {useEffect, useState} from "react";
 import LoadingNewMessage from "@/app/(with-appshell)/messages/new/loading";
 
-export function FilteringModule(props: { groups: IGroup[] }) {
+export default function FilteringModule(props: { groups: IGroup[] }) {
     const {groups, clear} = useFilteringManager(props.groups)
     const router = useRouter()
 

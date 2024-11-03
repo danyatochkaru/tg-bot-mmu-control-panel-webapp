@@ -5,12 +5,14 @@ import {useEffect} from "react";
 import useSWR from "swr";
 import {Mailing, Profile} from "@prisma/client";
 import {useGroupsStore} from "@/store/groups";
-import {FilteringDrawer} from "@/components/home/FilteringDrawer";
 import {useSearchParams} from "next/navigation";
 import {IconFilter, IconFilterFilled} from "@tabler/icons-react";
 import {useFilteringQueryString} from "@/components/home/useFilteringQueryString";
 import {MessagesListItem} from "@/components/home/MessagesListItem";
 import Title from "@/components/Title";
+import dynamic from "next/dynamic";
+
+const FilteringDrawer = dynamic(() => import("@/components/home/FilteringDrawer"), {ssr: false})
 
 export function MessagesListModule() {
     const sp = useSearchParams()

@@ -15,7 +15,7 @@ type FormValues = {
     doLinkPreview: boolean
 }
 
-export function PrintingModule() {
+export default function PrintingModule() {
     const [loading, toggleLoading] = useToggle()
     const router = useRouter()
     const selectedGroups = useFiltersStore(state => state.selectedGroups)

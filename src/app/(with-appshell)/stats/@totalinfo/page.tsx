@@ -1,4 +1,4 @@
-import {Badge, Group, NumberFormatter, Stack, Text} from "@mantine/core";
+import {Badge, Group, NumberFormatter, Stack, Text, Tooltip} from "@mantine/core";
 import {UsersCountResponse} from "@/types/stats";
 
 export default async function TotalInfoPage() {
@@ -25,8 +25,15 @@ export default async function TotalInfoPage() {
         </Group>
         {!!total.data.total_inactive &&
                 <Group gap={'xs'} align={'center'}>
-                    <Text title={"Кол-во пользователей, которые запретили отпраку сообщений от бота"}>Кол-во неактивных
-                        пользователей:</Text>
+                    <Tooltip position={'bottom-start'}
+                             multiline
+                             w={220}
+                             transitionProps={{duration: 320}}
+                             label={'Неактивными считаются пользователи, запретившие отправку сообщений от бота'}>
+                        <Text>Кол-во
+                            неактивных
+                            пользователей:</Text>
+                    </Tooltip>
                     <Badge size={'lg'} autoContrast color="brand">
                         <NumberFormatter
                                 value={total.data.total_inactive}

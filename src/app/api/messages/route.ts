@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import checkSession from "@/utils/checkSession";
 import MailingWhereInput = Prisma.MailingWhereInput;
 
+export const dynamic = 'force-dynamic';
+
 const newMessageSchema = z.object({
     message: z.string(),
     recipients: z.number().array().nonempty(),

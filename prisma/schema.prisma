@@ -44,15 +44,16 @@ model Invite {
 }
 
 model Mailing {
-    id         String        @id @default(uuid())
-    recipients Int[]
-    message    String
-    status     MailingStatus @default(PROCESSING)
-    progress   Int           @default(0)
-    failed     Int           @default(0)
-    senderId   String
-    createdAt  DateTime      @default(now())
-    sender     Profile       @relation(fields: [senderId], references: [id])
+    id              String        @id @default(uuid())
+    recipients      Int[]
+    message         String
+    status          MailingStatus @default(PROCESSING)
+    progress        Int           @default(0)
+    failed          Int           @default(0)
+    senderId        String
+    createdAt       DateTime      @default(now())
+    statusChangedAt DateTime      @default(now())
+    sender          Profile       @relation(fields: [senderId], references: [id])
 }
 
 model Recovery {

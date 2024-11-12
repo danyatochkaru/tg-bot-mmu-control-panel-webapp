@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_HOST=database
     ports:
-      - 3030:3000
+      - "3030:3000"
   database:
     image: postgres:16.1-alpine
     restart: unless-stopped
@@ -15,6 +15,6 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWD
       - POSTGRES_DB=$POSTGRES_DATABASE
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data

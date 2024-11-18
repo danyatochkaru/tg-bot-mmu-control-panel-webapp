@@ -55,7 +55,7 @@ export default async function NewUsersChartPage(props: Props) {
         sp.size && row.push(sp.toString())
         return row.join('?')
     }
-    return <Paper shadow="xs" p={'sm'}>
+    return <Paper withBorder p={'sm'}>
         <Stack gap={'lg'}>
             <Group justify={'space-between'}>
                 <Group gap={'xs'} align={'center'}>

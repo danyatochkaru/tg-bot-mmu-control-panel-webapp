@@ -1,5 +1,6 @@
-import {Badge, Group, NumberFormatter, Stack, Text, Tooltip} from "@mantine/core";
 import {UsersCountResponse} from "@/types/stats";
+import {Badge, ColorSwatch, Group, List, ListItem, NumberFormatter, Paper, Stack, Text} from "@mantine/core";
+import {DonutChart} from "@mantine/charts";
 
 export default async function TotalInfoPage() {
     const total: {
@@ -11,38 +12,62 @@ export default async function TotalInfoPage() {
         }
     }).then(i => i.json())
 
-    return <Stack gap={'xs'}>
-        <Group gap={'xs'} align={'center'}>
-            <Text>Кол-во зарегистрированных пользователей:</Text>
-            <Badge size={'lg'} autoContrast color="brand">
-                <NumberFormatter
-                        value={total.data.total_count}
-                        thousandSeparator=" "
-                        decimalScale={2}
-                        decimalSeparator="."
-                />
-            </Badge>
-        </Group>
-        {!!total.data.total_inactive &&
-                <Group gap={'xs'} align={'center'}>
-                    <Tooltip position={'bottom-start'}
-                             multiline
-                             w={220}
-                             transitionProps={{duration: 320}}
-                             label={'Неактивными считаются пользователи, запретившие отправку сообщений от бота'}>
-                        <Text>Кол-во
-                            неактивных
-                            пользователей:</Text>
-                    </Tooltip>
-                    <Badge size={'lg'} autoContrast color="brand">
+    const totalUsers = total.data.total_count,
+            activeUsers = (total.data.total_count - (total.data.total_inactive || 0)),
+            inactiveUsers = total.data.total_inactive || 0
+
+    return <Paper withBorder p="sm" w={'fit-content'}>
+        <Group>
+            <DonutChart
+                    size={120}
+                    paddingAngle={1}
+                    withTooltip={false}
+                    data={[
+                        {
+                            value: activeUsers,
+                            name: 'Активные',
+                            color: 'brand'
+                        },
+                        {value: inactiveUsers, name: 'Неактивные', color: 'gray'},
+                    ]}
+            />
+            <Stack gap={'xs'}>
+                <Text>
+                    <span>Всего пользователей: </span>
+                    <Badge size={'lg'} autoContrast color="brand" display={'inline-flex'}>
                         <NumberFormatter
-                                value={total.data.total_inactive}
+                                value={totalUsers}
                                 thousandSeparator=" "
                                 decimalScale={2}
                                 decimalSeparator="."
                         />
                     </Badge>
-                </Group>
-        }
-    </Stack>
+                </Text>
+                <List
+                        spacing="xs"
+                        center
+                >
+                    {[
+                        {label: 'Активных пользователей: ', value: activeUsers, color: 'brand'},
+                        {label: 'Неактивных пользователей: ', value: inactiveUsers, color: 'gray'},
+                    ].map(i => (
+                            <ListItem key={i.label}
+                                      icon={<ColorSwatch color={`var(--mantine-color-${i.color}-6)`}
+                                                         withShadow={false}
+                                                         size={12}/>}
+                            >
+                                <span>{i.label}</span>
+                                <NumberFormatter
+                                        value={i.value}
+                                        thousandSeparator=" "
+                                        decimalScale={2}
+                                        decimalSeparator="."
+                                />
+                            </ListItem>
+
+                    ))}
+                </List>
+            </Stack>
+        </Group>
+    </Paper>
 }

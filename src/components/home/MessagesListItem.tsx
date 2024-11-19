@@ -4,6 +4,7 @@ import {
     Badge,
     Button,
     Group,
+    Indicator,
     Paper,
     ScrollArea,
     SimpleGrid,
@@ -18,46 +19,74 @@ import {formatRelative} from "date-fns";
 import {useSession} from "next-auth/react";
 import remarkGfm from "remark-gfm";
 import {ru as ruLocale} from "date-fns/locale/ru";
+import {MailingStatus} from "@prisma/client";
+import MailingProgressBadge from "@/components/home/MailingProgressBadge";
 
 type Props = {
     message: string,
+    status?: MailingStatus
+    total: number
+    progress: number
     recipients: { groupOid: number, name: string }[],
     sender: { id: string, email: string, banned: Date | null },
     createdAt: Date
 }
 
-export function MessagesListItem({message, recipients, sender, createdAt}: Props) {
+export function MessagesListItem({message, status, progress, total, recipients, sender, createdAt}: Props) {
     const {data: session} = useSession()
 
+    const statusTest = {
+        [MailingStatus.PROCESSING]: 'В процессе',
+        [MailingStatus.COMPLETED]: 'Завершено',
+        [MailingStatus.CANCELLED]: 'Отменено',
+    }
+
     return <Stack gap={2}>
-        <Paper withBorder p={'xs'} bg={'gray.0'}>
-            <TypographyStylesProvider className={'message'} styles={{
-                root: {margin: 0, padding: 0},
-            }}>
-                <Markdown remarkPlugins={[remarkGfm]}>
-                    {message}
-                </Markdown>
-            </TypographyStylesProvider>
-        </Paper>
+        <Indicator
+                color={
+                    status === 'COMPLETED'
+                            ? 'green' : status === 'CANCELLED'
+                                    ? 'red' : 'brand'
+                }
+                inline
+                withBorder
+                size={14}
+                offset={2}
+                processing={status === 'PROCESSING'}
+                title={statusTest[status!]}
+        >
+            <Paper withBorder p={'xs'} bg={'gray.0'}>
+                <TypographyStylesProvider className={'message'} styles={{
+                    root: {margin: 0, padding: 0},
+                }}>
+                    <Markdown remarkPlugins={[remarkGfm]}>
+                        {message}
+                    </Markdown>
+                </TypographyStylesProvider>
+            </Paper>
+        </Indicator>
         <Group justify={'space-between'} gap={4} wrap={'wrap-reverse'}>
-            <Button size={'compact-sm'}
-                    variant={'subtle'}
-                    onClick={() => modals.open({
-                        title: `Список групп (всего: ${recipients.length})`,
-                        modalId: 'groups-list',
-                        children: <ScrollArea.Autosize mah={400}>
-                            <SimpleGrid cols={{base: 3, xs: 4}} spacing={'xs'}>
-                                {
-                                    recipients.map(item => (
-                                            <Badge key={item.groupOid}
-                                                   variant={'outline'}>{item.name}</Badge>)
-                                    )
-                                }
-                            </SimpleGrid>
-                        </ScrollArea.Autosize>
-                    })}>
-                Список групп
-            </Button>
+            <Group gap={4} align='center'>
+                <Button size={'compact-sm'}
+                        variant={'subtle'}
+                        onClick={() => modals.open({
+                            title: `Список групп (всего: ${recipients.length})`,
+                            modalId: 'groups-list',
+                            children: <ScrollArea.Autosize mah={400}>
+                                <SimpleGrid cols={{base: 3, xs: 4}} spacing={'xs'}>
+                                    {
+                                        recipients.map(item => (
+                                                <Badge key={item.groupOid}
+                                                       variant={'outline'}>{item.name}</Badge>)
+                                        )
+                                    }
+                                </SimpleGrid>
+                            </ScrollArea.Autosize>
+                        })}>
+                    Список групп
+                </Button>
+                {status === 'PROCESSING' && <MailingProgressBadge/>}
+            </Group>
             <Group>
                 <ProfileName id={sender.id} email={sender.email}
                              isMe={sender.id === session?.user.sub}

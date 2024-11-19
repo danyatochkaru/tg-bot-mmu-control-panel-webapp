@@ -60,10 +60,6 @@ export default function RichMessageEditor<
         editor?.setEditable(!disable)
     }, [disable]);
 
-    useEffect(() => {
-        console.log(form.values[contentProperty])
-    }, [form.values[contentProperty]]);
-
     return <Stack gap={2}>
         <RichTextEditor
                 editor={editor}

@@ -104,9 +104,18 @@ export async function POST(req: Request) {
 
         const initiator = await db.profile.findFirstOrThrow({where: {email: session.data.user!.email as string}})
 
+        const newMessage = await db.mailing.create({
+            data: {
+                message,
+                recipients,
+                senderId: initiator.id,
+            }
+        })
+
         const res = await fetch(`${process.env.BOT_API_HOST}/notifications`, {
             method: 'POST',
             body: JSON.stringify({
+                id: newMessage.id,
                 groups: recipients,
                 text: message,
                 doLinkPreview,
@@ -121,14 +130,6 @@ export async function POST(req: Request) {
             console.error(res)
             return NextResponse.json({message: 'Что-то пошло не так...'}, {status: res?.status || 500})
         }
-
-        const newMessage = await db.mailing.create({
-            data: {
-                message,
-                recipients,
-                senderId: initiator.id,
-            }
-        })
 
         return NextResponse.json({data: newMessage, message: 'Сообщение отправлено'}, {status: 201})
 

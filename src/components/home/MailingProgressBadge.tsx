@@ -23,6 +23,6 @@ export default function MailingProgressBadge() {
     return <Badge>
         {!data || isLoading
                 ? 'Загрузка...'
-                : `${(data.progress.current / data.progress.total).toFixed(1)}%`}
+                : `${(data.progress.current / data.progress.total * 100).toFixed(1)}%`}
     </Badge>
 }

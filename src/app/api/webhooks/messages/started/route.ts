@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         }
 
         const session = await checkSession()
-        if (!session.data && !req.headers.get('host')?.startsWith('192.168')) {
+        if (!session.data && req.headers.get('host') !== process.env.ALLOWED_WEBHOOK_HOST!) {
             return NextResponse.json(session.error, {status: session.status})
         }
 

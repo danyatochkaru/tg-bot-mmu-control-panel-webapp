@@ -20,19 +20,20 @@ import {useSession} from "next-auth/react";
 import remarkGfm from "remark-gfm";
 import {ru as ruLocale} from "date-fns/locale/ru";
 import {MailingStatus} from "@prisma/client";
-import MailingProgressBadge from "@/components/home/MailingProgressBadge";
+import dynamic from "next/dynamic";
+
+const MailingProgressBadge = dynamic(() => import("@/components/home/MailingProgressBadge"), {ssr: false})
+
 
 type Props = {
     message: string,
     status?: MailingStatus
-    total: number
-    progress: number
     recipients: { groupOid: number, name: string }[],
     sender: { id: string, email: string, banned: Date | null },
     createdAt: Date
 }
 
-export function MessagesListItem({message, status, progress, total, recipients, sender, createdAt}: Props) {
+export function MessagesListItem({message, status, recipients, sender, createdAt}: Props) {
     const {data: session} = useSession()
 
     const statusTest = {

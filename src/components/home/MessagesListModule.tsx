@@ -77,8 +77,6 @@ export function MessagesListModule() {
                             ? data?.messages?.map((i) => (
                                     <MessagesListItem key={i.id}
                                                       status={i.status}
-                                                      total={i.total}
-                                                      progress={i.progress}
                                                       message={i.message}
                                                       recipients={groups.filter(g => i.recipients.includes(g.groupOid))}
                                                       sender={i.sender}

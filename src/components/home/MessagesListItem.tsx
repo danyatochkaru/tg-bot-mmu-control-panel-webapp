@@ -27,20 +27,20 @@ const MailingProgressBadge = dynamic(() => import("@/components/home/MailingProg
 
 type Props = {
     message: string,
-    status?: MailingStatus
+    status: MailingStatus
     recipients: { groupOid: number, name: string }[],
     sender: { id: string, email: string, banned: Date | null },
     createdAt: Date
 }
 
+const statusText = {
+    [MailingStatus.PROCESSING]: 'В процессе',
+    [MailingStatus.COMPLETED]: 'Завершено',
+    [MailingStatus.CANCELLED]: 'Отменено',
+}
+
 export function MessagesListItem({message, status, recipients, sender, createdAt}: Props) {
     const {data: session} = useSession()
-
-    const statusTest = {
-        [MailingStatus.PROCESSING]: 'В процессе',
-        [MailingStatus.COMPLETED]: 'Завершено',
-        [MailingStatus.CANCELLED]: 'Отменено',
-    }
 
     return <Stack gap={2}>
         <Indicator
@@ -54,7 +54,6 @@ export function MessagesListItem({message, status, recipients, sender, createdAt
                 size={14}
                 offset={2}
                 processing={status === 'PROCESSING'}
-                title={statusTest[status!]}
         >
             <Paper withBorder p={'xs'} bg={'gray.0'}>
                 <TypographyStylesProvider className={'message'} styles={{

@@ -3,7 +3,7 @@ import {NextResponse} from "next/server";
 import prisma from "@/lib/db";
 import {MailingStatus} from "@prisma/client";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
     try {
         const session = await checkSession()
         if (!session.data && !req.headers.get('host')?.startsWith('192.168')) {

@@ -44,17 +44,26 @@ model Invite {
 }
 
 model Mailing {
-    id              String        @id @default(uuid())
+    id              String          @id @default(uuid())
     recipients      Int[]
     message         String
-    status          MailingStatus @default(PROCESSING)
-    progress        Int           @default(0)
-    failed          Int           @default(0)
-    total           Int           @default(0)
+    status          MailingStatus   @default(PROCESSING)
+    progress        Int             @default(0)
+    failed          Int             @default(0)
+    total           Int             @default(0)
     senderId        String
-    createdAt       DateTime      @default(now())
-    statusChangedAt DateTime      @default(now())
-    sender          Profile       @relation(fields: [senderId], references: [id])
+    createdAt       DateTime        @default(now())
+    statusChangedAt DateTime        @default(now())
+    sender          Profile         @relation(fields: [senderId], references: [id])
+    MailingGroups   MailingGroups[]
+}
+
+model MailingGroups {
+    id         String  @id @default(uuid())
+    groupId    String
+    recipients Int     @default(0)
+    mailingId  String
+    mailing    Mailing @relation(fields: [mailingId], references: [id])
 }
 
 model Recovery {

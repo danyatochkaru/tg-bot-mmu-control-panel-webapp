@@ -2,18 +2,12 @@
 
 import {Badge} from "@mantine/core";
 import useSWR from "swr";
+import {MESSAGES_STATUS} from "@/types/swr-responses";
 
 export default function MailingProgressBadge() {
-    const {data, isLoading} = useSWR<{
-        isRunning: boolean
-        progress: {
-            current: number
-            total: number
-            rejected: number
-        }
-    }>(
+    const {data, isLoading} = useSWR<MESSAGES_STATUS>(
             `/api/messages/status`,
-            {refreshInterval: 5 * 1000}
+            {refreshInterval: 10 * 1000}
     )
 
     if (!data?.isRunning) {

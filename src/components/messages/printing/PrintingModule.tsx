@@ -9,6 +9,7 @@ import useSWR from "swr";
 import endingByNum from "@/utils/endingByNum";
 import RichMessageEditor from "@/components/RichMessageEditor";
 import {PAGE_LINKS} from "@/constants/page-links";
+import {MESSAGES_STATUS, USERS_COUNT_BY_GROUP} from "@/types/swr-responses";
 
 type FormValues = {
     message: string
@@ -53,22 +54,11 @@ export default function PrintingModule() {
                 })
     }
 
-    const {data, isLoading} = useSWR<{
-        isRunning: boolean
-        progress: {
-            current: number
-            total: number
-            rejected: number
-        }
-    }>(
+    const {data, isLoading} = useSWR<MESSAGES_STATUS>(
             `/api/messages/status`,
             {refreshInterval: 5 * 1000}
     )
-    const {data: usersCount} = useSWR<{
-        groups: Record<string, number>,
-        inactive: number,
-        total: number
-    }>(
+    const {data: usersCount} = useSWR<USERS_COUNT_BY_GROUP>(
             `/api/users/countbygroups?groups=${selectedGroups.join(',')}`,
             {refreshInterval: 5 * 60 * 1000}
     )

@@ -3,7 +3,6 @@
 import {ActionIcon, Group, Loader, Pagination, SegmentedControl, Stack, Text} from "@mantine/core";
 import {useEffect} from "react";
 import useSWR from "swr";
-import {Mailing, Profile} from "@prisma/client";
 import {useGroupsStore} from "@/store/groups";
 import {useSearchParams} from "next/navigation";
 import {IconFilter, IconFilterFilled} from "@tabler/icons-react";
@@ -11,6 +10,7 @@ import {useFilteringQueryString} from "@/components/home/useFilteringQueryString
 import {MessagesListItem} from "@/components/home/MessagesListItem";
 import Title from "@/components/Title";
 import dynamic from "next/dynamic";
+import {MESSAGES} from "@/types/swr-responses";
 
 const FilteringDrawer = dynamic(() => import("@/components/home/FilteringDrawer"), {ssr: false})
 
@@ -28,10 +28,7 @@ export function MessagesListModule() {
     const groups = useGroupsStore(state => state.groups)
 
 
-    const {data, isLoading, error} = useSWR<{
-        messages: (Mailing & { sender: Profile })[],
-        count: number
-    }>(
+    const {data, isLoading, error} = useSWR<MESSAGES>(
             `/api/messages?${getRequestQuery()}`,
             {refreshInterval: 30 * 1000}
     )
@@ -76,11 +73,9 @@ export function MessagesListModule() {
                     : data?.messages?.length
                             ? data?.messages?.map((i) => (
                                     <MessagesListItem key={i.id}
-                                                      status={i.status}
-                                                      message={i.message}
-                                                      recipients={groups.filter(g => i.recipients.includes(g.groupOid))}
+                                                      data={i}
                                                       sender={i.sender}
-                                                      createdAt={i.createdAt}
+                                                      recipients={groups.filter(g => i.recipients.includes(g.groupOid))}
                                     />
                             ))
                             : error ? <Text>Произошла ошибка. Попробуйте перезагрузить страницу или повторите запрос

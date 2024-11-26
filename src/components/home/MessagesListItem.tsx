@@ -1,66 +1,50 @@
 'use client'
 
-import {
-    Badge,
-    Button,
-    Group,
-    Indicator,
-    Paper,
-    ScrollArea,
-    SimpleGrid,
-    Stack,
-    Text,
-    TypographyStylesProvider
-} from "@mantine/core";
+import {Button, Group, Indicator, Paper, Stack, Text, TypographyStylesProvider} from "@mantine/core";
 import Markdown from "react-markdown";
-import {modals} from "@mantine/modals";
+import {useModals} from "@mantine/modals";
 import {ProfileName} from "@/components/ProfileName";
 import {formatRelative} from "date-fns";
 import {useSession} from "next-auth/react";
 import remarkGfm from "remark-gfm";
 import {ru as ruLocale} from "date-fns/locale/ru";
-import {MailingStatus} from "@prisma/client";
+import {Mailing, Profile} from "@prisma/client";
 import dynamic from "next/dynamic";
+import MailingDetailsModal from "@/components/home/MailingDetailsModal";
 
 const MailingProgressBadge = dynamic(() => import("@/components/home/MailingProgressBadge"), {ssr: false})
 
 
 type Props = {
-    message: string,
-    status: MailingStatus
+    data: Mailing,
+    sender: Profile,
     recipients: { groupOid: number, name: string }[],
-    sender: { id: string, email: string, banned: Date | null },
-    createdAt: Date
 }
 
-const statusText = {
-    [MailingStatus.PROCESSING]: 'В процессе',
-    [MailingStatus.COMPLETED]: 'Завершено',
-    [MailingStatus.CANCELLED]: 'Отменено',
-}
-
-export function MessagesListItem({message, status, recipients, sender, createdAt}: Props) {
+export function MessagesListItem({recipients, sender, data}: Props) {
     const {data: session} = useSession()
+    const {openModal, modals} = useModals()
 
     return <Stack gap={2}>
         <Indicator
                 color={
-                    status === 'COMPLETED'
-                            ? 'green' : status === 'CANCELLED'
+                    data.status === 'COMPLETED'
+                            ? 'green' : data.status === 'CANCELLED'
                                     ? 'red' : 'brand'
                 }
                 inline
                 withBorder
                 size={14}
                 offset={2}
-                processing={status === 'PROCESSING'}
+                zIndex={10}
+                processing={data.status === 'PROCESSING'}
         >
             <Paper withBorder p={'xs'} bg={'gray.0'}>
                 <TypographyStylesProvider className={'message'} styles={{
                     root: {margin: 0, padding: 0},
                 }}>
                     <Markdown remarkPlugins={[remarkGfm]}>
-                        {message}
+                        {data.message}
                     </Markdown>
                 </TypographyStylesProvider>
             </Paper>
@@ -69,23 +53,24 @@ export function MessagesListItem({message, status, recipients, sender, createdAt
             <Group gap={4} align='center'>
                 <Button size={'compact-sm'}
                         variant={'subtle'}
-                        onClick={() => modals.open({
-                            title: `Список групп (всего: ${recipients.length})`,
-                            modalId: 'groups-list',
-                            children: <ScrollArea.Autosize mah={400}>
-                                <SimpleGrid cols={{base: 3, xs: 4}} spacing={'xs'}>
-                                    {
-                                        recipients.map(item => (
-                                                <Badge key={item.groupOid}
-                                                       variant={'outline'}>{item.name}</Badge>)
-                                        )
-                                    }
-                                </SimpleGrid>
-                            </ScrollArea.Autosize>
-                        })}>
-                    Список групп
+                        onClick={() => {
+                            openModal({
+                                title: `Информация о сообщении`,
+                                modalId: 'mailing-details',
+                                children: <MailingDetailsModal
+                                        id={data.id}
+                                        recipients={recipients}
+                                        status={data.status}
+                                        total={data.total}
+                                        progress={data.progress}
+                                />
+                            })
+                        }}>
+                    Подробнее
                 </Button>
-                {status === 'PROCESSING' && <MailingProgressBadge/>}
+                {data.status === 'PROCESSING'
+                        && modals.every(i => i.id !== 'mailing-details')
+                        && <MailingProgressBadge/>}
             </Group>
             <Group>
                 <ProfileName id={sender.id} email={sender.email}
@@ -95,9 +80,9 @@ export function MessagesListItem({message, status, recipients, sender, createdAt
                              short
                 />
                 <Text size={'sm'}
-                      title={new Date(createdAt).toLocaleString('ru', {})}
+                      title={new Date(data.createdAt).toLocaleString('ru', {})}
                 >{
-                    formatRelative(new Date(createdAt), new Date(), {
+                    formatRelative(new Date(data.createdAt), new Date(), {
                         locale: ruLocale,
                     })
                 }</Text>

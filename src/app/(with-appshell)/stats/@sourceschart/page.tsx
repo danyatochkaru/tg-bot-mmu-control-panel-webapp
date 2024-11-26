@@ -1,9 +1,10 @@
-import {Stack, Text} from "@mantine/core";
-import {PieChart} from "@mantine/charts";
+import {ColorSwatch, Group, List, ListItem, NumberFormatter, Paper, Stack, Text} from "@mantine/core";
+import {DonutChart} from "@mantine/charts";
+import {ReactNode} from "react";
 
-const SOURCE_TRANSLATE: Record<string, string> = {
-    'directly': 'Через /start',
-    'group_link': 'Через ссылку'
+const SOURCE_TRANSLATE: Record<string, string | ReactNode> = {
+    'directly': <>С помощью команды <pre style={{display: 'inline'}}>/start</pre></>,
+    'group_link': 'Через пригласительную ссылку'
 }
 
 export default async function SourcesChartPage() {
@@ -14,20 +15,49 @@ export default async function SourcesChartPage() {
         }
     }).then(i => i.json())
 
-    return <Stack gap={'lg'}>
-        <Text>Источники регистрации:</Text>
-        <PieChart size={240}
-                  withLabelsLine
-                  labelsPosition="inside"
-                  labelsType="percent"
-                  withLabels
-                  withTooltip
-                  data={sources.toSorted((a, b) => b.count - a.count).map((s, index) => ({
-                      key: s.source,
-                      name: SOURCE_TRANSLATE[s.source] || s.source,
-                      value: +s.count,
-                      color: ['brand', 'teal'][index]
-                  }))}
-        />
-    </Stack>
+    const data = sources
+            .toSorted((a, b) => b.count - a.count)
+            .map((s, index) => ({
+                key: s.source,
+                name: SOURCE_TRANSLATE[s.source] || s.source,
+                value: +s.count,
+                color: ['brand', 'teal'][index]
+            }))
+
+    return <Paper withBorder p="sm" miw={'fit-content'} w={'100%'}>
+        <Group>
+            <DonutChart size={120}
+                        paddingAngle={1}
+                        withTooltip={false}
+                        data={data.map(i => ({
+                            ...i,
+                            name: typeof i.name === 'string' ? i.name : i.key
+                        }))}
+            />
+            <Stack gap={'xs'}>
+                <Text>Источники регистрации:</Text>
+                <List
+                        spacing="xs"
+                        center
+                >
+                    {data.map(i => (
+                            <ListItem key={i.key}
+                                      icon={<ColorSwatch color={`var(--mantine-color-${i.color}-6)`}
+                                                         withShadow={false}
+                                                         size={12}/>}
+                            >
+                                <span>{i.name}: </span>
+                                <NumberFormatter
+                                        value={i.value}
+                                        thousandSeparator=" "
+                                        decimalScale={2}
+                                        decimalSeparator="."
+                                />
+                            </ListItem>
+
+                    ))}
+                </List>
+            </Stack>
+        </Group>
+    </Paper>
 }

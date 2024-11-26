@@ -71,20 +71,20 @@ export default async function NewUsersChartPage(props: Props) {
                     <ButtonGroup>
                         {[
                             {
-                                label: "←",
+                                label: "⬅",
                                 title: "Предыдущий период",
                                 date: selectedDate,
                                 days: -days,
                             },
                             {
-                                label: "→",
+                                label: "⮕",
                                 title: "Следующий период",
                                 date: selectedDate,
                                 days: days,
                                 disabled: endOfDay(selectedDate).getTime() >= endOfDay(new Date()).getTime()
                             },
                             {
-                                label: '↺',
+                                label: '↪',
                                 title: "Сброс",
                                 date: new Date(),
                                 days: 0,
@@ -111,7 +111,7 @@ export default async function NewUsersChartPage(props: Props) {
                     data={
                         dates.map(d => ({
                             date: format(d, 'dd.MM.yyyy'),
-                            'Новых пользователей за день': stats.data.details.find(j =>
+                            'Новых пользователей': stats.data.details.find(j =>
                                     format(j.date, 'yyyy-MM-dd') === format(d, 'yyyy-MM-dd')
                             )?.groups.reduce((acc, cur) => acc + cur.count, 0) || 0
                         }))

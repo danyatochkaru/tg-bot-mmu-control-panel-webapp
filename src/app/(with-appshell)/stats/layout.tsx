@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, Group, Stack} from "@mantine/core";
+import {Container, Group, SimpleGrid, Stack} from "@mantine/core";
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/lib/auth";
 import {redirect} from "next/navigation";
@@ -27,9 +27,11 @@ export default async function StatsLayout(props: {
                     <Title title={'Статистика бота'}/>
                 </Group>
             </Group>
-            {props.totalinfo}
+            <SimpleGrid cols={{base: 1, sm: 2}} spacing={'xs'}>
+                {props.totalinfo}
+                {props.sourceschart}
+            </SimpleGrid>
             {props.newuserschart}
-            {props.sourceschart}
         </Stack>
     </Container>
 }

@@ -1,5 +1,5 @@
 import {UsersCountResponse} from "@/types/stats";
-import {Badge, ColorSwatch, Group, List, ListItem, NumberFormatter, Paper, Stack, Text} from "@mantine/core";
+import {Badge, ColorSwatch, Flex, Group, List, ListItem, NumberFormatter, Paper, Stack, Text} from "@mantine/core";
 import {DonutChart} from "@mantine/charts";
 
 export default async function TotalInfoPage() {
@@ -16,7 +16,7 @@ export default async function TotalInfoPage() {
             activeUsers = (total.data.total_count - (total.data.total_inactive || 0)),
             inactiveUsers = total.data.total_inactive || 0
 
-    return <Paper withBorder p="sm" w={'fit-content'}>
+    return <Paper withBorder p="sm" miw={'fit-content'} w={'100%'}>
         <Group>
             <DonutChart
                     size={120}
@@ -32,8 +32,8 @@ export default async function TotalInfoPage() {
                     ]}
             />
             <Stack gap={'xs'}>
-                <Text>
-                    <span>Всего пользователей: </span>
+                <Flex gap={'0.25rem'}>
+                    <Text>Всего пользователей: </Text>
                     <Badge size={'lg'} autoContrast color="brand" display={'inline-flex'}>
                         <NumberFormatter
                                 value={totalUsers}
@@ -42,7 +42,7 @@ export default async function TotalInfoPage() {
                                 decimalSeparator="."
                         />
                     </Badge>
-                </Text>
+                </Flex>
                 <List
                         spacing="xs"
                         center

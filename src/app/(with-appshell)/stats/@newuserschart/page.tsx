@@ -8,6 +8,7 @@ import Link from "next/link";
 import {AreaChart} from "@mantine/charts";
 import calcAvgValue from "@/utils/calcAvgValue";
 import {AvgLineViewControl} from "@/components/stats/AvgLineViewControl";
+import {IconArrowForward, IconArrowLeft, IconArrowRight} from "@tabler/icons-react";
 
 type Props = {
     searchParams: Record<string, string>
@@ -75,20 +76,20 @@ export default async function NewUsersChartPage(props: Props) {
                     <ButtonGroup>
                         {[
                             {
-                                label: "⬅",
+                                label: <IconArrowLeft size={'1rem'}/>,
                                 title: "Предыдущий период",
                                 date: selectedDate,
                                 days: -days,
                             },
                             {
-                                label: "⮕",
+                                label: <IconArrowRight size={'1rem'}/>,
                                 title: "Следующий период",
                                 date: selectedDate,
                                 days: days,
                                 disabled: endOfDay(selectedDate).getTime() >= endOfDay(new Date()).getTime()
                             },
                             {
-                                label: '↪',
+                                label: <IconArrowForward size={'1rem'}/>,
                                 title: "Сброс",
                                 date: new Date(),
                                 days: 0,
@@ -96,7 +97,7 @@ export default async function NewUsersChartPage(props: Props) {
                             },
                         ].map(i => (
                                 <Button
-                                        key={i.label}
+                                        key={i.title}
                                         component={Link}
                                         href={getPeriodHref(i.date, i.days)}
                                         title={i.title}

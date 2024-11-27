@@ -29,13 +29,12 @@ export async function POST(req: Request) {
                 return data
             }).catch(err => {
                 console.error(err)
-                return {current: 0, total: 0, rejected: 0}
+                return {data: {current: 0, total: 0, rejected: 0}, args: {id: '', text: '', groupList: [], options: {}}}
             })
 
 
         await prisma.mailing.update({
             data: {
-                progress: data.data.current,
                 failed: data.data.rejected,
                 total: data.data.total,
                 status: 'PROCESSING',

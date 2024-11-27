@@ -48,7 +48,6 @@ model Mailing {
     recipients      Int[]
     message         String
     status          MailingStatus   @default(PROCESSING)
-    progress        Int             @default(0)
     failed          Int             @default(0)
     total           Int             @default(0)
     senderId        String

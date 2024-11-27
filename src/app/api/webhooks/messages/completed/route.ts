@@ -31,24 +31,26 @@ export async function POST(req: Request) {
             };
         }
 
-        const data: { args: Arguments, data: Payload } = await req.json()
+        const body: { args: Arguments, data: Payload } = await req.json()
             .then(data => {
                 // console.log(data)
                 return data
             }).catch(err => {
                 console.error(err)
-                return {current: 0, total: 0, rejected: 0}
+                return {
+                    args: {id: '', text: '', groupList: [], options: {}},
+                    data: {studentsCountByGroup: {}, rejected: [], totalUsers: 0, allOk: false}
+                }
             })
 
         await prisma.mailing.update({
             data: {
-                progress: data.data.totalUsers,
-                failed: data.data.rejected?.length || 0,
+                failed: body.data.rejected?.length || 0,
                 status: 'COMPLETED',
                 statusChangedAt: new Date()
             },
             where: {
-                id: data.args.id
+                id: body.args.id
             }
         })
 

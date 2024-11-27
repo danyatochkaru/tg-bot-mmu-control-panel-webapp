@@ -25,9 +25,9 @@ function TotalInfoLabels({activeUsers, inactiveUsers}: Props) {
     }, [activeUsers, inactiveUsers])
 
     useEffect(() => {
-        const stats = JSON.parse(getCookie('stats') || "{}")
+        const stats: { active: number, inactive: number, lastUpdated: Date } = JSON.parse(getCookie('stats') || "{}")
 
-        if (addHours(new Date(), -1).getTime() > new Date(stats.lastUpdated).getTime()) {
+        if (!stats?.lastUpdated || addHours(new Date(), -1).getTime() > new Date(stats.lastUpdated).getTime()) {
             updateStats()
         }
 

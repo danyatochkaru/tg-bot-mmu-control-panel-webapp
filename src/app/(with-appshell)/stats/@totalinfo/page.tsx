@@ -1,6 +1,7 @@
 import {UsersCountResponse} from "@/types/stats";
-import {Badge, ColorSwatch, Flex, Group, List, ListItem, NumberFormatter, Paper, Stack, Text} from "@mantine/core";
+import {Badge, Flex, Group, NumberFormatter, Paper, Stack, Text} from "@mantine/core";
 import {DonutChart} from "@mantine/charts";
+import TotalInfoLabels from "@/components/stats/TotalInfoLabels";
 
 export default async function TotalInfoPage() {
     const total: {
@@ -43,30 +44,7 @@ export default async function TotalInfoPage() {
                         />
                     </Badge>
                 </Flex>
-                <List
-                        spacing="xs"
-                        center
-                >
-                    {[
-                        {label: 'Активных пользователей: ', value: activeUsers, color: 'brand'},
-                        {label: 'Неактивных пользователей: ', value: inactiveUsers, color: 'gray'},
-                    ].map(i => (
-                            <ListItem key={i.label}
-                                      icon={<ColorSwatch color={`var(--mantine-color-${i.color}-6)`}
-                                                         withShadow={false}
-                                                         size={12}/>}
-                            >
-                                <span>{i.label}</span>
-                                <NumberFormatter
-                                        value={i.value}
-                                        thousandSeparator=" "
-                                        decimalScale={2}
-                                        decimalSeparator="."
-                                />
-                            </ListItem>
-
-                    ))}
-                </List>
+                <TotalInfoLabels activeUsers={activeUsers} inactiveUsers={inactiveUsers}/>
             </Stack>
         </Group>
     </Paper>

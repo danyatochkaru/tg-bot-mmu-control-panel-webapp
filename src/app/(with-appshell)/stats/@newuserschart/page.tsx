@@ -13,8 +13,12 @@ type Props = {
     searchParams: Record<string, string>
 }
 
+const MAX_DAYS_PER_REQUEST = 90,
+        DEFAULT_DAYS_PER_REQUEST = 7
+const NEW_USERS_PER_DAY_LABEL = 'Новых пользователей'
+
 export default async function NewUsersChartPage(props: Props) {
-    const days = (+props.searchParams.days > 30 ? 30 : +props.searchParams.days) || 7
+    const days = (+props.searchParams.days > MAX_DAYS_PER_REQUEST ? MAX_DAYS_PER_REQUEST : +props.searchParams.days) || DEFAULT_DAYS_PER_REQUEST
     const selectedDate = new Date(props.searchParams.date || Date.now())
 
     const dates = Array
@@ -111,7 +115,7 @@ export default async function NewUsersChartPage(props: Props) {
                     data={
                         dates.map(d => ({
                             date: format(d, 'dd.MM.yyyy'),
-                            'Новых пользователей': stats.data.details.find(j =>
+                            [NEW_USERS_PER_DAY_LABEL]: stats.data.details.find(j =>
                                     format(j.date, 'yyyy-MM-dd') === format(d, 'yyyy-MM-dd')
                             )?.groups.reduce((acc, cur) => acc + cur.count, 0) || 0
                         }))
@@ -130,7 +134,7 @@ export default async function NewUsersChartPage(props: Props) {
                             ]
                             : undefined}
                     series={[
-                        {name: 'Новых пользователей за день', color: 'brand'}
+                        {name: NEW_USERS_PER_DAY_LABEL, color: 'brand'}
                     ]}
                     curveType="monotone"
             />

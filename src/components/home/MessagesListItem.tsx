@@ -10,9 +10,9 @@ import remarkGfm from "remark-gfm";
 import {ru as ruLocale} from "date-fns/locale/ru";
 import {Mailing, Profile} from "@prisma/client";
 import dynamic from "next/dynamic";
+import MailingDetailsModal from "@/components/home/MailingDetailsModal";
 
 const MailingProgressBadge = dynamic(() => import("@/components/home/MailingProgressBadge"), {ssr: false})
-const MailingDetailsModal = dynamic(() => import("@/components/home/MailingDetailsModal"), {ssr: false})
 
 type Props = {
     data: Mailing,
@@ -23,6 +23,7 @@ type Props = {
 export function MessagesListItem({recipients, sender, data}: Props) {
     const {data: session} = useSession()
     const {openModal, modals} = useModals()
+
 
     return <Stack gap={2}>
         <Indicator
@@ -54,7 +55,7 @@ export function MessagesListItem({recipients, sender, data}: Props) {
                         variant={'subtle'}
                         onClick={() => {
                             openModal({
-                                title: `Информация о сообщении`,
+                                title: `Информация о рассылке`,
                                 modalId: 'mailing-details',
                                 overlayProps: {
                                     backgroundOpacity: 0.55,

@@ -1,18 +1,18 @@
 'use client'
 
-import {Badge, Group, ScrollArea, SimpleGrid, Stack, Text} from "@mantine/core";
-import Title from "@/components/Title";
+import {Badge, Group, ScrollArea, Stack, Text} from "@mantine/core";
 import {Mailing, MailingStatus} from "@prisma/client";
 import useSWR from "swr";
 import {useCallback} from "react";
 import {MESSAGES_STATUS} from "@/types/swr-responses";
+import ModalGroupsList from "@/components/home/ModalGroupsList";
 
 type Props = {
     recipients: { groupOid: number, name: string }[],
     id: Mailing['id'],
     status: Mailing['status']
     failed: Mailing['failed'],
-    total: Mailing['total'],
+    total: Mailing['total']
 }
 
 const statusText = {
@@ -45,22 +45,15 @@ export default function MailingDetailsModal({recipients, status, failed, total, 
                                     ? 'green' : status === 'CANCELLED'
                                             ? 'red' : 'brand'}
                     >{statusText[status]}</Badge></Text>
-                    <Text>Всего получателей: {getTotal()}</Text>
+                    {getTotal() > 0 && <Text>Всего получателей: {getTotal()}</Text>}
                     {status === 'COMPLETED'
+                            && getTotal() > 0
                             && <Group display={'inline-flex'} align={'center'} gap={'xs'}>
                                 <Text>Успешных отправок: {getSuccess()}</Text>
-                                {getTotal() > 0
-                                        && <Badge autoContrast>{(getSuccess() / getTotal() * 100).toFixed(1)}%</Badge>}
+                                <Badge autoContrast>{(getSuccess() / getTotal() * 100).toFixed(1)}%</Badge>
                             </Group>}
                 </Stack>}
-        <Title title={"Список групп"} subtitle={`всего: ${recipients.length}`} mb={'xs'}/>
-        <SimpleGrid cols={{base: 3, xs: 4}} spacing={'xs'}>
-            {
-                recipients.map(item => (
-                        <Badge key={item.groupOid}
-                               variant={'outline'}>{item.name}</Badge>)
-                )
-            }
-        </SimpleGrid>
+
+        <ModalGroupsList recipients={recipients} id={id}/>
     </ScrollArea.Autosize>
 }

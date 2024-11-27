@@ -1,6 +1,8 @@
 import checkSession from "@/utils/checkSession";
 import {NextResponse} from "next/server";
 import prisma from "@/lib/db";
+import {Prisma} from "@prisma/client";
+import MailingGroupsCreateManyInput = Prisma.MailingGroupsCreateManyInput;
 
 export async function POST(req: Request) {
     try {
@@ -52,6 +54,17 @@ export async function POST(req: Request) {
             where: {
                 id: body.args.id
             }
+        })
+
+        const createManyMailingGroupsData: MailingGroupsCreateManyInput[] = []
+
+        new Map(Object.entries(body.data.studentsCountByGroup))
+            .forEach((recipients, groupId) => {
+                createManyMailingGroupsData.push({recipients, groupId, mailingId: body.args.id})
+            })
+
+        await prisma.mailingGroups.createMany({
+            data: createManyMailingGroupsData,
         })
 
         return NextResponse.json({ok: 'ok'})

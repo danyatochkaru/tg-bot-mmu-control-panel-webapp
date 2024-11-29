@@ -20,7 +20,7 @@ export default async function TotalInfoPage() {
     return <Paper withBorder p="sm" miw={'fit-content'} w={'100%'}>
         <Group>
             <DonutChart
-                    size={120}
+                    size={100}
                     paddingAngle={1}
                     withTooltip={false}
                     data={[

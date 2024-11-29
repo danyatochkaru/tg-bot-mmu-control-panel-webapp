@@ -1,8 +1,10 @@
-import {Loader, Stack, Text} from "@mantine/core";
+import {Loader, Paper, Stack, Text} from "@mantine/core";
 
 export default function SourcesChartLoading() {
-    return <Stack gap={'xs'} align={'center'}>
-        <Loader/>
-        <Text>Загрузка модуля...</Text>
-    </Stack>
+    return <Paper withBorder p="sm" miw={'fit-content'} w={'100%'}>
+        <Stack gap={'xs'} align={'center'}>
+            <Loader/>
+            <Text>Загрузка модуля...</Text>
+        </Stack>
+    </Paper>
 }

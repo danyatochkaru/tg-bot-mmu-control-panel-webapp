@@ -6,12 +6,11 @@ import MailingGroupsCreateManyInput = Prisma.MailingGroupsCreateManyInput;
 
 export async function POST(req: Request) {
     try {
-        for (const [key, value] of Array.from(req.headers.entries())) {
-            console.log(key, value)
-        }
-
         const session = await checkSession()
         if (!session.data && req.headers.get('host') !== process.env.ALLOWED_WEBHOOK_HOST!) {
+            for (const [key, value] of Array.from(req.headers.entries())) {
+                console.log(key, value)
+            }
             return NextResponse.json(session.error, {status: session.status})
         }
 

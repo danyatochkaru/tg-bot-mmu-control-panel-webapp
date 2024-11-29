@@ -26,7 +26,7 @@ export default async function SourcesChartPage() {
 
     return <Paper withBorder p="sm" miw={'fit-content'} w={'100%'}>
         <Group>
-            <DonutChart size={120}
+            <DonutChart size={100}
                         paddingAngle={1}
                         withTooltip={false}
                         data={data.map(i => ({

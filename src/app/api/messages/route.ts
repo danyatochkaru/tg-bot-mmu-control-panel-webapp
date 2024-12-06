@@ -70,7 +70,7 @@ export async function GET(req: Request) {
         const messages = await db.mailing.findMany({
             where,
             skip: url.searchParams.has('skip') ? parseInt(url.searchParams.get('skip')!) : 0,
-            take: url.searchParams.has('take') ? parseInt(url.searchParams.get('take')!) : 12,
+            take: url.searchParams.has('take') ? parseInt(url.searchParams.get('take')!) : 10,
             orderBy: {
                 [orderBy]: orderDir,
             },

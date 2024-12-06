@@ -61,7 +61,7 @@ export const useFilteringQueryString = (options?: Options) => {
         }
 
         if (url?.searchParams.has(PAGE)) {
-            const count = options?.itemsPerPage ?? 12
+            const count = options?.itemsPerPage ?? 10
             sp.set('take', String(count))
             sp.set('skip', String(((parseInt(url?.searchParams.get('page') || '1') - 1) * count)))
         }

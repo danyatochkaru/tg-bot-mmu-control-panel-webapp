@@ -1,6 +1,6 @@
 'use client'
 
-import {Badge, SimpleGrid, Stack} from "@mantine/core";
+import {Stack, Table, TableData} from "@mantine/core";
 import {MailingGroups} from "@prisma/client";
 import Title from "@/components/Title";
 import {useEffect, useState} from "react";
@@ -33,20 +33,19 @@ export default function ModalGroupsList({recipients, id}: Props) {
         return <div>Ошибка при загрузке: {error.message}</div>
     }
 
+    const tableData: TableData = {
+        head: ['Группа', 'Кол-во получателей'],
+        body: (groupsList.length
+                        ? groupsList.map(i => [groups.find(g => g.groupOid === +i.groupId)?.name || '', i.recipients])
+                        : recipients.map(item => [item.name, 'Нет данных'])
+        ).toSorted((a, b) => (a[0] as string).localeCompare(b[0] as string))
+    }
+
     return <Stack gap={'xs'}>
         <Title title={"Список групп"} subtitle={`всего: ${groupsList.length || recipients.length}`}/>
-        <SimpleGrid cols={{base: 3, xs: 4}} spacing={'xs'}>
-            {
-                groupsList.length
-                        ? groupsList.map(item => (
-                                <Badge key={item.id}
-                                       variant={'outline'}>{groups.find(i => i.groupOid === +item.groupId)?.name} ({item.recipients})</Badge>
-                        ))
-                        : recipients.map(item => (
-                                <Badge key={item.groupOid}
-                                       variant={'outline'}>{item.name}</Badge>)
-                        )
-            }
-        </SimpleGrid>
+        <Table
+                stickyHeader stickyHeaderOffset={-2}
+                data={tableData}
+        />
     </Stack>
 }

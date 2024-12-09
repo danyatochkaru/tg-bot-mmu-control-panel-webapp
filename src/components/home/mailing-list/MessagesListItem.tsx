@@ -10,9 +10,9 @@ import remarkGfm from "remark-gfm";
 import {ru as ruLocale} from "date-fns/locale/ru";
 import {Mailing, Profile} from "@prisma/client";
 import dynamic from "next/dynamic";
-import MailingDetailsModal from "@/components/home/MailingDetailsModal";
+import MailingDetailsModal from "@/components/home/detail-modal/MailingDetailsModal";
 
-const MailingProgressBadge = dynamic(() => import("@/components/home/MailingProgressBadge"), {ssr: false})
+const MailingProgressBadge = dynamic(() => import("@/components/home/mailing-list/MailingProgressBadge"), {ssr: false})
 
 type Props = {
     data: Mailing,

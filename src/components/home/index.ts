@@ -1,1 +1,1 @@
-export {MessagesListModule} from './MessagesListModule'
+export {MessagesListModule} from './mailing-list/MessagesListModule'

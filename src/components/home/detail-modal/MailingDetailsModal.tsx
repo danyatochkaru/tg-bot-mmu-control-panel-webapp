@@ -5,7 +5,7 @@ import {Mailing, MailingStatus} from "@prisma/client";
 import useSWR from "swr";
 import {useCallback} from "react";
 import {MESSAGES_STATUS} from "@/types/swr-responses";
-import ModalGroupsList from "@/components/home/ModalGroupsList";
+import ModalGroupsList from "@/components/home/detail-modal/ModalGroupsList";
 
 type Props = {
     recipients: { groupOid: number, name: string }[],
